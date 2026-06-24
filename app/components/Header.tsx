@@ -5,6 +5,7 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ScrollProgress from "./ScrollProgress";
 
 const menuItems = [
   { id: 1, title: "How It Works", slug: "/how-it-works", subItems: [] },
@@ -133,6 +134,7 @@ export default function Header() {
             </button>
           </div>
         </div>
+        <ScrollProgress />
       </header>
 
       {/* Mobile drawer overlay */}
