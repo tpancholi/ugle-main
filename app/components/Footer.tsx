@@ -158,7 +158,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6">
           <div className="flex gap-4">
             <Link
-              href="/privacy"
+              href="/privacy-policy"
               className="text-gray-400 hover:text-white transition-colors font-mono text-xs"
             >
               Privacy Policy
