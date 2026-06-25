@@ -1,6 +1,6 @@
 export default function Problem() {
   return (
-    <section className="bg-[#1C1C1C] py-8 md:py-16 text-white">
+    <section className="bg-[#1C1C1C] py-16 md:py-20 text-white">
       <div className="max-w-6xl mx-auto px-6">
         <div className="mb-16">
           <div className="font-mono text-xs md:text-[13px] tracking-[0.14em] uppercase text-[#75C043] font-medium mb-4">

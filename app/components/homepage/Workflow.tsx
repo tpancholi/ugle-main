@@ -33,7 +33,7 @@ const useCaseList = [
 
 export default function Workflow() {
   return (
-    <section className="py-8 md:py-16 bg-[#F8FAF9]">
+    <section className="py-16 md:py-20 bg-[#F8FAF9]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="mb-16">
           <div className="font-mono text-xs md:text-[13px] tracking-[0.14em] uppercase text-[#5DA233] font-medium mb-4">

@@ -46,7 +46,7 @@ export default function Hero() {
     },
   };
   return (
-    <section className="max-w-5xl mx-auto px-6 py-8 md:py-16 relative z-10 text-center">
+    <section className="max-w-5xl mx-auto px-6 py-16 md:py-24 relative z-10 text-center">
       <motion.div
         variants={containerVariants}
         initial="hidden"

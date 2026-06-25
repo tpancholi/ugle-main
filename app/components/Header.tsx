@@ -176,29 +176,39 @@ export default function Header() {
               {item.subItems.length === 0 ? (
                 <Link
                   href={item.slug}
+                  onClick={() => setMobileOpen(false)}
                   className="flex items-center w-full px-4 py-3 rounded-xl text-sm font-medium text-ugle-slate hover:bg-[#F8FAF9] hover:text-[#75C043] transition-colors"
                 >
                   {item.title}
                 </Link>
               ) : (
                 <>
-                  {/* Accordion trigger */}
-                  <button
-                    aria-expanded={openAccordion === item.id}
-                    onClick={() =>
-                      setOpenAccordion(
-                        openAccordion === item.id ? null : item.id,
-                      )
-                    }
-                    className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-medium text-ugle-slate hover:bg-[#F8FAF9] hover:text-[#75C043] transition-colors"
-                  >
-                    {item.title}
-                    <ChevronDown
-                      className={`size-4 opacity-60 transition-transform duration-300 ${
-                        openAccordion === item.id ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
+                  {/* Accordion trigger: link label + separate chevron toggle */}
+                  <div className="flex items-center rounded-xl hover:bg-[#F8FAF9] transition-colors">
+                    <Link
+                      href={item.slug}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex-1 px-4 py-3 text-sm font-medium text-ugle-slate hover:text-[#75C043] transition-colors"
+                    >
+                      {item.title}
+                    </Link>
+                    <button
+                      aria-expanded={openAccordion === item.id}
+                      aria-label={`Toggle ${item.title} submenu`}
+                      onClick={() =>
+                        setOpenAccordion(
+                          openAccordion === item.id ? null : item.id,
+                        )
+                      }
+                      className="px-3 py-3 text-ugle-slate hover:text-[#75C043] transition-colors"
+                    >
+                      <ChevronDown
+                        className={`size-4 opacity-60 transition-transform duration-300 ${
+                          openAccordion === item.id ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  </div>
 
                   {/* Accordion body */}
                   <div
@@ -213,6 +223,7 @@ export default function Header() {
                         <Link
                           key={subItem.id}
                           href={`${item.slug}/${subItem.slug}`}
+                          onClick={() => setMobileOpen(false)}
                           className="block py-2 text-sm text-ugle-gray hover:text-[#75C043] transition-colors"
                         >
                           {subItem.title}
@@ -230,12 +241,14 @@ export default function Header() {
         <div className="px-6 py-6 border-t border-ugle-light/60 space-y-3">
           <Link
             href="/request-demo"
+            onClick={() => setMobileOpen(false)}
             className="flex items-center justify-center w-full py-3 rounded-xl text-sm font-semibold text-ugle-slate border border-ugle-light hover:border-[#75C043] hover:text-[#75C043] transition-all"
           >
             Request Demo
           </Link>
           <Link
             href="/download"
+            onClick={() => setMobileOpen(false)}
             className="flex items-center justify-center w-full py-3 rounded-xl bg-[#1C1C1C] hover:bg-[#75C043] text-white hover:text-[#1C1C1C] font-semibold text-sm shadow-sm transition-all"
           >
             Get Early Access
