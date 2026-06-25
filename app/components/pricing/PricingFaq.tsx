@@ -35,8 +35,12 @@ export default function PricingFaq() {
             a: "Yes. After activation, Ugle runs entirely without internet. Transcription, indexing, and search are all local. Internet is required for initial activation and updates only.",
           },
           {
-            q: "Educational or non-profit pricing?",
-            a: "40% off Solo licences for verified institutions and registered non-profit news organisations. Contact pricing@ugle.ai.",
+            q: "Is there a loyalty discount?",
+            a: "Yes. Individual subscribers receive a 15% loyalty discount on every subsequent renewal — annual drops from $199 to $169/year, monthly from $25 to $20/month.",
+          },
+          {
+            q: "Educational or non-commercial pricing?",
+            a: "Both are completely free. Education licences require verification of enrollment or employment at an accredited institution (processed within 2 business days). Non-commercial use requires no approval — just confirm you're not earning commercial benefits.",
           },
         ].map((item, i) => (
           <div

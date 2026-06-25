@@ -2,206 +2,185 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Check } from "lucide-react";
+import { Check, Mail } from "lucide-react";
 
-// ── Pricing card components ───────────────────────────────────────────────────
+// ── Shared check-list row ─────────────────────────────────────────────────────
 
-function PriceCard({
-  title,
-  badge,
+function Feature({
+  text,
   dark = false,
-  description,
-  features,
-  priceLabel,
-  priceMain,
-  vatNote,
-  primaryBtn,
 }: {
-  title: string;
-  badge?: string;
+  text: string;
   dark?: boolean;
-  description: string;
-  features: string[];
-  priceLabel: string;
-  priceMain: string;
-  vatNote?: string;
-  primaryBtn: string;
 }) {
-  const bg = dark
-    ? "bg-ugle-slate border-ugle-slate"
-    : "bg-white border-ugle-light/60";
-  const titleCol = dark ? "text-white" : "text-ugle-slate";
-  const descCol = dark ? "text-white/55" : "text-ugle-gray";
-  const dividerCol = dark ? "border-white/10" : "border-ugle-light/60";
-  const priceLabelCol = dark ? "text-white/50" : "text-ugle-gray";
-  const priceMainCol = dark ? "text-white" : "text-ugle-slate";
-  const vatCol = dark ? "text-white/35" : "text-ugle-gray/55";
-  const checkCol = dark ? "text-[#75C043]" : "text-[#5DA233]";
-  const featureTextCol = dark ? "text-white/70" : "text-ugle-slate";
-
   return (
     <div
-      className={`rounded-2xl border shadow-sm relative flex flex-col ${bg}`}
+      className={`flex items-start gap-2.5 text-[13.5px] font-medium ${dark ? "text-white/70" : "text-ugle-slate"}`}
     >
-      {badge && (
-        <div className="absolute -top-3.5 left-6">
-          <span className="bg-ugle-green text-[#102206] font-bold text-xs px-4 py-1.5 rounded-full tracking-wide whitespace-nowrap shadow">
-            {badge}
-          </span>
-        </div>
-      )}
+      <Check
+        className={`size-3.5 shrink-0 mt-0.5 ${dark ? "text-[#75C043]" : "text-[#5DA233]"}`}
+        strokeWidth={2.5}
+      />
+      <span>{text}</span>
+    </div>
+  );
+}
 
-      {/* ── Title + Description ── */}
-      <div className={`p-6 pb-5 ${badge ? "pt-8" : ""}`}>
-        <h3
-          className={`text-[20px] font-extrabold tracking-tight leading-tight mb-2 ${titleCol}`}
-        >
-          {title}
-        </h3>
-        <p className={`text-[14px] leading-snug ${descCol}`}>{description}</p>
-      </div>
+// ── Individual pricing panel ──────────────────────────────────────────────────
+function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
+  const price = isAnnual ? "$169" : "$20";
+  const origPrice = isAnnual ? "$199" : "$25";
+  const period = isAnnual ? "per user, per year" : "per user, per month";
+  const loyaltyNote = isAnnual ? "loyalty renewal rate · save ~15%" : "loyalty renewal rate · save ~20%";
+  const updatesNote = isAnnual
+    ? "Updates included for 12 months"
+    : "Updates included while subscribed";
 
-      {/* ── Features ── */}
-      <div
-        className={`px-6 pb-5 flex-1 space-y-2.5 border-t ${dividerCol} pt-5`}
-      >
-        {features.map((f, i) => (
-          <div
-            key={i}
-            className={`flex items-start gap-2.5 text-[13.5px] font-medium ${featureTextCol}`}
-          >
-            <Check
-              className={`size-3.5 shrink-0 mt-0.75 ${checkCol}`}
-              strokeWidth={2.5}
-            />
-            <span>{f}</span>
+  return (
+    <div className="max-w-2xl mx-auto mb-32">
+      {/* Card — light style matching other panels */}
+      <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
+        {/* Header band */}
+        <div className="bg-ugle-slate px-8 py-7">
+          <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
+            Personal subscription
           </div>
-        ))}
-      </div>
-
-      {/* ── Price row (space-between) ── */}
-      <div
-        className={`px-6 py-4 border-t ${dividerCol} flex items-center justify-between gap-4`}
-      >
-        <div
-          className={`text-[13px] font-medium leading-snug ${priceLabelCol}`}
-        >
-          {priceLabel}
+          <h2 className="text-[26px] font-extrabold text-white tracking-tight leading-tight">
+            Private individuals buying with their own funds
+          </h2>
         </div>
-        <div className="text-right">
-          <span className="line-through text-ugle-gray/35">$199</span>
-          <div
-            className={`text-[32px] font-extrabold tracking-tight leading-none ${priceMainCol}`}
-          >
-            {priceMain}
+
+        {/* Body */}
+        <div className="px-8 py-7 space-y-5">
+          <div className="space-y-3">
+            <Feature text="1 personal licence" />
+            <Feature text="Unlimited library size" />
+            <Feature text="90+ languages" />
+            <Feature text="Clip export included" />
+            <Feature text={updatesNote} />
           </div>
-          {vatNote && (
-            <div className={`text-[12px] mt-0.5 ${vatCol}`}>{vatNote}</div>
-          )}
+
+          <div className="border-t border-ugle-light/60 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <div className="text-[13px] text-ugle-gray mb-0.5">{period}</div>
+              <div className="flex items-baseline gap-2">
+                <span className="line-through text-ugle-gray/40 text-sm">{origPrice}</span>
+                <div className="text-[32px] font-extrabold text-ugle-slate tracking-tight leading-none">
+                  {price}
+                </div>
+              </div>
+              <div className="text-[12px] text-ugle-gray/55 mt-0.5">{loyaltyNote}</div>
+            </div>
+            <button className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors whitespace-nowrap">
+              {isAnnual ? "Buy Annual Licence" : "Buy Monthly Licence"}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ── CTA Button ── */}
-      <div className={`px-6 pb-6 pt-3`}>
-        <button
-          className={`w-full py-3 rounded-[10px] font-bold text-[14px] transition-all ${
-            dark
-              ? "bg-ugle-green text-[#102206] hover:bg-[#5DA233] hover:text-white"
-              : "bg-ugle-slate text-white hover:bg-[#222]"
-          }`}
-        >
-          {primaryBtn}
-        </button>
+      {/* Loyalty note — below the card */}
+      <div className="mt-4 flex items-start gap-3 bg-[#F0F9EA] border border-[#75C043]/30 rounded-xl px-5 py-4">
+        <span className="text-[#5DA233] text-lg mt-0.5">&#10022;</span>
+        <div>
+          <p className="text-sm font-semibold text-ugle-slate">
+            15% Loyalty Discount on every renewal
+          </p>
+          <p className="text-[13px] text-ugle-gray mt-0.5">
+            Prices shown reflect the loyalty rate for returning subscribers.
+            First-time price:{" "}
+            <span className="font-semibold">{isAnnual ? "$199/year" : "$25/month"}</span>.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
-function SoloCard({
-  isAnnual,
-  soloPrice,
-}: {
-  isAnnual: boolean;
-  soloPrice: { main: string; orig: string; per: string };
-}) {
-  return (
-    <PriceCard
-      title="Solo"
-      description="Freelance journalists, independent producers, solo editors."
-      features={[
-        "Up to 2 machines (same user)",
-        isAnnual
-          ? "12 months of updates. Renew at $99/year."
-          : "Updates included while subscribed",
-        "Unlimited Library size",
-        "90+ languages",
-        "Clip export included",
-      ]}
-      priceLabel={isAnnual ? "per user, per year" : "per user, per month"}
-      priceMain={soloPrice.main}
-      vatNote="incl. VAT US $15.22"
-      primaryBtn="Buy Solo Licence"
-    />
-  );
-}
 
-function LifetimeCard() {
-  return (
-    <PriceCard
-      title="Solo Lifetime Access*"
-      badge="We Recommend"
-      dark
-      description="Believers. Pay once, use forever — no renewal, ever."
-      features={[
-        "Up to 2 machines (same user)",
-        "120 months of updates included",
-        "Unlimited Library size",
-        "90+ languages",
-        "Clip export included",
-      ]}
-      priceLabel="one-time payment"
-      priceMain="$999"
-      vatNote="incl. VAT US $15.22"
-      primaryBtn="Buy Freedom Licence"
-    />
-  );
-}
 
-function TeamCard({
-  isAnnual,
-  teamPrice,
-}: {
-  isAnnual: boolean;
-  teamPrice: { main: string; orig: string; per: string };
-}) {
-  return (
-    <PriceCard
-      title="Team"
-      description="Editorial teams, production companies, newsrooms."
-      features={[
-        "Per-seat, company licence",
-        isAnnual
-          ? "Updates included for licence duration"
-          : "Updates included while subscribed",
-        "Unlimited Library size · 90+ languages",
-        "Priority support — 4-hour response SLA",
-        "Admin console included",
-      ]}
-      priceLabel={isAnnual ? "per seat, per year" : "per seat, per month"}
-      priceMain={teamPrice.main}
-      vatNote="incl. VAT US $15.22"
-      primaryBtn="Contact for Team Pricing"
-    />
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-
-function NonCommercialPanel() {
+// ── Organisation panel ────────────────────────────────────────────────────────
+function OrganisationPanel() {
   return (
     <div className="max-w-2xl mx-auto mb-32">
       <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
         {/* Header band */}
+        <div className="bg-ugle-slate px-8 py-7">
+          <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
+            Commercial subscription
+          </div>
+          <h2 className="text-[26px] font-extrabold text-white tracking-tight leading-tight">
+            Companies &amp; organisations using Ugle commercially
+          </h2>
+        </div>
+
+        {/* Body */}
+        <div className="px-8 py-7 space-y-5">
+          <p className="text-[15px] text-ugle-gray leading-relaxed">
+            For teams of more than 3 seats. Concurrent users cannot exceed the
+            number of purchased subscriptions. Billed yearly or monthly.
+          </p>
+
+          <div className="space-y-3">
+            {[
+              "More than 3 seats — scale to your team size",
+              "Concurrent users \u2264 purchased subscriptions",
+              "Yearly or monthly billing options",
+              "Priority support & SLA available",
+              "Admin console & centralised licence management",
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-3 text-[14px] font-medium text-ugle-slate"
+              >
+                <Check
+                  className="size-3.5 shrink-0 mt-0.5 text-[#5DA233]"
+                  strokeWidth={2.5}
+                />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-t border-ugle-light/60 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <div className="text-[13px] text-ugle-gray mb-0.5">Pricing</div>
+              <div className="text-[32px] font-extrabold text-ugle-slate tracking-tight leading-none">
+                On Request
+              </div>
+              <div className="text-[12px] text-ugle-gray/55 mt-0.5">
+                tailored to your team size
+              </div>
+            </div>
+            <a
+              href="mailto:pricing@ugle.ai"
+              className="inline-flex items-center gap-2 justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
+            >
+              <Mail className="size-4" />
+              Contact for pricing
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Enterprise nudge */}
+      <div className="mt-4 text-center text-[13px] text-ugle-gray/70">
+        Need an air-gapped or on-premise deployment?{" "}
+        <a
+          href="mailto:enterprise@ugle.ai"
+          className="text-[#5DA233] font-semibold hover:underline"
+        >
+          enterprise@ugle.ai
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ── Non-commercial panel ──────────────────────────────────────────────────────
+function NonCommercialPanel() {
+  return (
+    <div className="max-w-2xl mx-auto mb-32">
+      <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
         <div className="bg-ugle-slate px-8 py-7">
           <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
             Non-commercial licence
@@ -211,18 +190,17 @@ function NonCommercialPanel() {
           </h2>
         </div>
 
-        {/* Body */}
         <div className="px-8 py-7 space-y-5">
           <p className="text-[15px] text-ugle-gray leading-relaxed">
             Individuals using eligible Ugle products without earning commercial
-            benefits can use Ugle for free.
+            benefits can use Ugle for free. No approval required.
           </p>
 
           <div className="space-y-3">
             {[
               "Personal documentary or archival projects",
               "Academic research (non-institutional)",
-              "Community journalism — no paid distribution",
+              "Community journalism \u2014 no paid distribution",
               "Creative hobbyists with no commercial output",
             ].map((item, i) => (
               <div
@@ -230,7 +208,7 @@ function NonCommercialPanel() {
                 className="flex items-start gap-3 text-[14px] font-medium text-ugle-slate"
               >
                 <Check
-                  className="size-3.5 shrink-0 mt-0.75 text-[#5DA233]"
+                  className="size-3.5 shrink-0 mt-0.5 text-[#5DA233]"
                   strokeWidth={2.5}
                 />
                 <span>{item}</span>
@@ -245,14 +223,14 @@ function NonCommercialPanel() {
                 Free
               </div>
               <div className="text-[12px] text-ugle-gray/55 mt-0.5">
-                subject to eligibility review
+                no approval required
               </div>
             </div>
             <a
               href="mailto:pricing@ugle.ai"
               className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
             >
-              Apply for free access
+              Get free access
             </a>
           </div>
         </div>
@@ -261,11 +239,11 @@ function NonCommercialPanel() {
   );
 }
 
+// ── Education panel ───────────────────────────────────────────────────────────
 function EducationPanel() {
   return (
     <div className="max-w-2xl mx-auto mb-32">
       <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
-        {/* Header band */}
         <div className="bg-ugle-slate px-8 py-7">
           <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
             Education licence
@@ -275,7 +253,6 @@ function EducationPanel() {
           </h2>
         </div>
 
-        {/* Body */}
         <div className="px-8 py-7 space-y-5">
           <p className="text-[15px] text-ugle-gray leading-relaxed">
             Education licences are free for currently enrolled students and
@@ -295,7 +272,7 @@ function EducationPanel() {
                 className="flex items-start gap-3 text-[14px] font-medium text-ugle-slate"
               >
                 <Check
-                  className="size-3.5 shrink-0 mt-0.75 text-[#5DA233]"
+                  className="size-3.5 shrink-0 mt-0.5 text-[#5DA233]"
                   strokeWidth={2.5}
                 />
                 <span>{item}</span>
@@ -303,7 +280,6 @@ function EducationPanel() {
             ))}
           </div>
 
-          {/* Verification note */}
           <div className="bg-[#F8FAF9] border border-ugle-light/70 rounded-xl px-5 py-4 text-[13px] text-ugle-gray leading-relaxed">
             <span className="font-semibold text-ugle-slate">
               Verification required.
@@ -320,7 +296,7 @@ function EducationPanel() {
                 Free
               </div>
               <div className="text-[12px] text-ugle-gray/55 mt-0.5">
-                pending verification & approval
+                pending verification &amp; approval
               </div>
             </div>
             <a
@@ -336,20 +312,13 @@ function EducationPanel() {
   );
 }
 
+// ── Main export ───────────────────────────────────────────────────────────────
 export default function PricingMain() {
-  const [billing, setBilling] = useState<"monthly" | "annual">("annual");
   const [category, setCategory] = useState<
     "individuals" | "organisation" | "non-commercial" | "education"
   >("individuals");
-  const showBilling = category === "individuals" || category === "organisation";
+  const [billing, setBilling] = useState<"annual" | "monthly">("annual");
   const isAnnual = billing === "annual";
-
-  const soloPrice = isAnnual
-    ? { main: "$169", orig: "$199", per: "/year" }
-    : { main: "$17", orig: "", per: "/month" };
-  const teamPrice = isAnnual
-    ? { main: "$149", orig: "$169", per: "/seat/year" }
-    : { main: "$15", orig: "", per: "/seat/mo" };
 
   const categories = [
     { id: "organisation", label: "Organisation" },
@@ -357,15 +326,17 @@ export default function PricingMain() {
     { id: "non-commercial", label: "Non-commercial" },
     { id: "education", label: "Education" },
   ] as const;
+
   return (
     <>
+      {/* ── Category tabs ── */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="mb-6 flex flex-col items-center"
+        className="mb-10 flex flex-col items-center"
       >
-        {/* Desktop: single outer border wraps all tabs */}
+        {/* Desktop */}
         <div className="hidden sm:inline-flex border border-ugle-light rounded-lg p-1 gap-0.5">
           {categories.map((cat) => (
             <button
@@ -388,7 +359,7 @@ export default function PricingMain() {
           ))}
         </div>
 
-        {/* Mobile: each tab has its own border */}
+        {/* Mobile */}
         <div className="flex sm:hidden flex-wrap gap-2">
           {categories.map((cat) => (
             <button
@@ -412,43 +383,41 @@ export default function PricingMain() {
         </div>
       </motion.div>
 
-      {/* ── Billing toggle ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className={`mb-12 flex justify-center transition-opacity duration-200 ${
-          showBilling ? "block opacity-100" : "hidden"
-        }`}
-      >
-        <div className="inline-flex border border-ugle-light rounded-lg p-1 gap-0.5">
-          <button
-            id="billing-annual"
-            onClick={() => setBilling("annual")}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-base font-semibold whitespace-nowrap transition-colors duration-200 ${
-              isAnnual
-                ? "border border-ugle-green text-ugle-slate"
-                : "border border-transparent text-ugle-gray hover:text-ugle-slate"
-            }`}
-          >
-            Annual billing
-            <span className="text-[11px] font-bold text-[#5DA233]">
-              save ~17%
-            </span>
-          </button>
-          <button
-            id="billing-monthly"
-            onClick={() => setBilling("monthly")}
-            className={`px-4 py-1.5 rounded-lg text-[13.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${
-              !isAnnual
-                ? "border border-ugle-green text-ugle-slate"
-                : "border border-transparent text-ugle-gray hover:text-ugle-slate"
-            }`}
-          >
-            Monthly billing
-          </button>
-        </div>
-      </motion.div>
+      {/* ── Billing toggle — only for individuals ── */}
+      {category === "individuals" && (
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-12 flex justify-center"
+        >
+          <div className="inline-flex border border-ugle-light rounded-lg p-1 gap-0.5">
+            <button
+              id="billing-annual"
+              onClick={() => setBilling("annual")}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-base font-semibold whitespace-nowrap transition-colors duration-200 ${
+                isAnnual
+                  ? "border border-ugle-green text-ugle-slate"
+                  : "border border-transparent text-ugle-gray hover:text-ugle-slate"
+              }`}
+            >
+              Annual billing
+              <span className="text-[11px] font-bold text-[#5DA233]">save ~15%</span>
+            </button>
+            <button
+              id="billing-monthly"
+              onClick={() => setBilling("monthly")}
+              className={`px-4 py-1.5 rounded-lg text-[13.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${
+                !isAnnual
+                  ? "border border-ugle-green text-ugle-slate"
+                  : "border border-transparent text-ugle-gray hover:text-ugle-slate"
+              }`}
+            >
+              Monthly billing
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       {/* ── Content area — switches by category ── */}
       <motion.div
@@ -461,17 +430,10 @@ export default function PricingMain() {
           <NonCommercialPanel />
         ) : category === "education" ? (
           <EducationPanel />
+        ) : category === "organisation" ? (
+          <OrganisationPanel />
         ) : (
-          <div className="grid md:grid-cols-3 gap-6 max-w-7xl mx-auto mb-32 items-start">
-            {/* ── Solo card ── */}
-            <SoloCard isAnnual={isAnnual} soloPrice={soloPrice} />
-
-            {/* ── Solo Lifetime card ── */}
-            <LifetimeCard />
-
-            {/* ── Team card ── */}
-            <TeamCard isAnnual={isAnnual} teamPrice={teamPrice} />
-          </div>
+          <IndividualsPanel isAnnual={isAnnual} />
         )}
       </motion.div>
     </>

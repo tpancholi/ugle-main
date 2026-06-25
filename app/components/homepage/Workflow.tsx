@@ -101,7 +101,7 @@ export default function Workflow() {
             <Link
               key={idx}
               href={`/use-cases/${c.slug}`}
-              className="group block bg-white border border-ugle-light/60 hover:border-ugle-green/50 rounded-2xl p-8 transition-all hover:shadow-[0_10px_40px_-10px_rgba(117,192,67,0.15)] relative overflow-hidden"
+              className="group flex flex-col bg-white border border-ugle-light/60 hover:border-ugle-green/50 rounded-2xl p-8 transition-all hover:shadow-[0_10px_40px_-10px_rgba(117,192,67,0.15)] relative overflow-hidden"
             >
               <div className="bg-white size-12 rounded-xl flex items-center justify-center border border-ugle-light shadow-sm mb-6 group-hover:scale-110 transition-transform">
                 <c.icon className="size-6 text-ugle-slate" />
