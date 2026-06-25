@@ -8,9 +8,10 @@ export default function HowItWorks() {
           <div className="font-mono text-xs md:text-[13px] tracking-[0.14em] uppercase text-[#5DA233] font-medium mb-4">
             How it works
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-snug text-ugle-slate mb-6">
-            One Click to Connect your archive. Build a local index. Search
-            anything inside. Nothing leaves your device.
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-snug text-ugle-slate mb-6">
+            <span className="text-ugle-green">One Click to Connect</span> your
+            archive. Build a local index. Search anything inside. Nothing leaves
+            your device.
           </h2>
         </div>
 
