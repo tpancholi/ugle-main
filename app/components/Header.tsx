@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import ScrollProgress from "./ScrollProgress";
 
 const menuItems = [
@@ -23,15 +22,8 @@ const menuItems = [
 ];
 
 export default function Header() {
-  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<number | null>(null);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-    setOpenAccordion(null);
-  }, [pathname]);
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
@@ -56,6 +48,7 @@ export default function Header() {
                 alt="Ugle Logo"
                 width={110}
                 height={40}
+                priority
               />
             </Link>
           </div>
