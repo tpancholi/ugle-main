@@ -77,7 +77,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-5 items-center w-full justify-center"
         >
           <Link
-            href="/download"
+            href="/get-early-access"
             className="bg-ugle-green hover:bg-[#86d950] transition-colors text-[#1C1C1C] font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl text-lg text-center flex items-center justify-center gap-3 w-full sm:w-auto"
           >
             Get Early Access
