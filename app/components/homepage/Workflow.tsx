@@ -33,7 +33,7 @@ const useCaseList = [
 
 export default function Workflow() {
   return (
-    <section className="py-24 md:py-32 bg-[#F8FAF9]">
+    <section className="py-8 md:py-16 bg-[#F8FAF9]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="mb-16">
           <div className="font-mono text-xs md:text-[13px] tracking-[0.14em] uppercase text-[#5DA233] font-medium mb-4">
@@ -95,7 +95,7 @@ export default function Workflow() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20"
         >
           {useCaseList.map((c, idx) => (
             <Link
@@ -121,7 +121,7 @@ export default function Workflow() {
         </motion.div>
 
         {/* Privacy statement */}
-        <div className="mb-32 p-10 md:p-16 bg-[#1C1C1C] rounded-3xl text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
+        <div className="mb-16 p-10 md:p-16 bg-[#1C1C1C] rounded-3xl text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 size-125 bg-[#75C043] rounded-full blur-[150px] opacity-20 transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
           <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-4 mb-8">
@@ -154,7 +154,7 @@ export default function Workflow() {
               href="/download"
               className="inline-flex items-center justify-center bg-[#75C043] hover:bg-[#86d950] text-[#1C1C1C] font-bold py-5 px-12 rounded-2xl shadow-lg transition-transform hover:scale-105 text-xl"
             >
-              Download Free
+              Get Early Access
             </Link>
           </div>
         </div>

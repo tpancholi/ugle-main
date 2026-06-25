@@ -46,7 +46,7 @@ export default function Hero() {
     },
   };
   return (
-    <section className="max-w-5xl mx-auto px-6 pt-16 md:pt-24 pb-16 md:pb-24 relative z-10 text-center">
+    <section className="max-w-5xl mx-auto px-6 py-8 md:py-16 relative z-10 text-center">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -77,7 +77,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-5 items-center w-full justify-center"
         >
           <Link
-            href="/get-early-access"
+            href="/download"
             className="bg-ugle-green hover:bg-[#86d950] transition-colors text-[#1C1C1C] font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl text-lg text-center flex items-center justify-center gap-3 w-full sm:w-auto"
           >
             Get Early Access
