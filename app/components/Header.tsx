@@ -96,7 +96,7 @@ export default function Header() {
               Request Demo
             </Link>
             <Link
-              href="/download"
+              href="/get-early-access"
               className="flex items-center justify-center bg-[#1C1C1C] hover:bg-[#75C043] text-white hover:text-[#1C1C1C] font-semibold px-5 py-2.5 rounded-lg shadow-sm transition-all text-sm"
             >
               Get Early Access
