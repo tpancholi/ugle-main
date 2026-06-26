@@ -4,18 +4,24 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { notFound } from "next/navigation";
+import GlobalCTA from "@/app/components/GlobalCTA";
+import { FAQSection } from "@/app/components/sharedpages/FAQSection";
 
 export function generateStaticParams() {
-  return [
-    { slug: "newsrooms" },
-    { slug: "podcasts" },
-    { slug: "journalists" },
-  ];
+  return [{ slug: "newsrooms" }, { slug: "podcasts" }, { slug: "journalists" }];
 }
 
 const USE_CASE_DATA: Record<
   string,
-  { title: string; badge: string; subtitle: string; content: React.ReactNode }
+  {
+    title: string;
+    badge: string;
+    subtitle: string;
+    content: React.ReactNode;
+    ctatitle: string;
+    ctasubtitle: string;
+    ctaText: string;
+  }
 > = {
   newsrooms: {
     title: "Newsroom editors",
@@ -107,8 +113,36 @@ const USE_CASE_DATA: Record<
             </tbody>
           </table>
         </div>
+
+        <FAQSection
+          items={[
+            {
+              question: "Is it secure for unreleased news footage?",
+              answer:
+                "Yes. All processing is strictly local. Ugle never uploads audio or video to the cloud, ensuring your unreleased stories and sources remain confidential.",
+            },
+            {
+              question: "How fast can I search an hour of interview?",
+              answer:
+                "Once indexed, searching takes less than 30 milliseconds regardless of how many hours of footage you have in your library.",
+            },
+            {
+              question: "Does it support broadcast standard formats?",
+              answer:
+                "Yes. Ugle supports WAV, AIFF, Broadcast WAV, as well as common camera formats like MP4, MOV, and MKV.",
+            },
+            {
+              question: "Can I use it offline?",
+              answer:
+                "Absolutely. Ugle's transcription models and search engine run entirely on your local machine and require no internet connection after installation.",
+            },
+          ]}
+        />
       </>
     ),
+    ctatitle: "Ready to speed up your newsroom?",
+    ctasubtitle: "Never lose a quote again. Start searching your archive.",
+    ctaText: "Request a demo",
   },
   podcasts: {
     title: "Podcast producers",
@@ -162,8 +196,36 @@ const USE_CASE_DATA: Record<
             </ol>
           </div>
         </div>
+
+        <FAQSection
+          items={[
+            {
+              question: "Can Ugle handle hundreds of episodes?",
+              answer:
+                "Yes. Ugle is designed to index and search thousands of hours of audio. The search index is highly optimized, allowing you to search an entire podcast back catalog in milliseconds.",
+            },
+            {
+              question: "Can I export clips with timestamps?",
+              answer:
+                "Yes. You can preview the search results in context, select the clips you need, and export them. The export will preserve the original quality and include precise timestamp data for your editor.",
+            },
+            {
+              question: "Does it transcribe overlapping speakers well?",
+              answer:
+                "Ugle's local transcription engine is built on robust AI models that handle conversational audio, including overlapping speakers and varying audio quality, very well.",
+            },
+            {
+              question: "How much storage does the index take?",
+              answer:
+                "The text index is incredibly small. It typically takes about 2-5% of the original audio file's size.",
+            },
+          ]}
+        />
       </>
     ),
+    ctatitle: "Build better compilation episodes.",
+    ctasubtitle: "Find the exact clip across hundreds of episodes instantly.",
+    ctaText: "Get Ugle for Podcasts",
   },
   journalists: {
     title: "Journalists",
@@ -241,8 +303,37 @@ const USE_CASE_DATA: Record<
             </tbody>
           </table>
         </div>
+
+        <FAQSection
+          items={[
+            {
+              question: "Are my recordings safe from subpoenas against Ugle?",
+              answer:
+                "Yes. Because Ugle operates entirely on your local device, we possess zero data to turn over. There are no cloud transcripts or remote servers to subpoena.",
+            },
+            {
+              question: "Does Ugle collect any usage telemetry?",
+              answer:
+                "No. Ugle does not log your search queries, file names, or application activity. Your investigative work remains completely private.",
+            },
+            {
+              question: "Can I use Ugle on an air-gapped machine?",
+              answer:
+                "Yes. Once the software is installed and the license is activated, you can move your machine entirely offline. The transcription and search functionality will continue to work perfectly.",
+            },
+            {
+              question:
+                "What happens if I encrypt the hard drive where my files are stored?",
+              answer:
+                "Ugle works seamlessly with encrypted drives. You simply unlock the drive through your OS as usual, and Ugle will read the files from their local directory.",
+            },
+          ]}
+        />
       </>
     ),
+    ctatitle: "Protect your sources.",
+    ctasubtitle: "100% on-device indexing. Complete privacy.",
+    ctaText: "Get Early Access",
   },
 };
 
@@ -259,20 +350,29 @@ export default async function UseCasePage({
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-24 pb-32">
-      <Link
-        href="/use-cases"
-        className="inline-flex items-center text-sm font-semibold text-ugle-gray hover:text-[#75C043] transition-colors mb-12"
-      >
-        <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Back to Use Cases
-      </Link>
-      <UseCaseHeader
-        badge={useCase.badge}
-        title={useCase.title}
-        subtitle={useCase.subtitle}
-      />
+    <>
+      <div className="max-w-4xl mx-auto px-6 pt-12">
+        <Link
+          href="/use-cases"
+          className="inline-flex items-center text-sm font-semibold text-ugle-gray hover:text-[#75C043] transition-colors mb-12"
+        >
+          <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Back to Use Cases
+        </Link>
+        <UseCaseHeader
+          badge={useCase.badge}
+          title={useCase.title}
+          subtitle={useCase.subtitle}
+        />
 
-      <UseCaseMain>{useCase.content}</UseCaseMain>
-    </div>
+        <UseCaseMain>{useCase.content}</UseCaseMain>
+      </div>
+      <section className="w-full border-t border-ugle-light/60 bg-[#F8FAF9] py-16 md:py-20">
+        <GlobalCTA
+          title={useCase.ctatitle}
+          subtitle={useCase.ctasubtitle}
+          ctaText={useCase.ctaText}
+        />
+      </section>
+    </>
   );
 }

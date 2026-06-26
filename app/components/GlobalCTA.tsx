@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import CTAButton from "./CTAButton";
 
 export default function GlobalCTA({
@@ -35,7 +35,7 @@ export default function GlobalCTA({
         >
           {ctaText || "Get Early Access"}
         </Link> */}
-        <CTAButton />
+        <CTAButton title={ctaText} link={ctaLink} />
       </div>
     </div>
   );
