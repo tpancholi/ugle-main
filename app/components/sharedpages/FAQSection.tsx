@@ -11,7 +11,7 @@ export const FAQSection = ({
   const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
-    <div className="mt-24 mb-16 max-w-4xl mx-auto px-6">
+    <div className="mt-12 md:mt-16 mb-16 max-w-4xl mx-auto md:px-6">
       <h2 className="text-3xl md:text-4xl font-bold mb-10 text-ugle-slate text-center">
         Frequently Asked Questions
       </h2>

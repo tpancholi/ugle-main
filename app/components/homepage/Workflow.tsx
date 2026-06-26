@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { motion } from "motion/react";
+import CTAButton from "../CTAButton";
 
 const useCaseList = [
   {
@@ -150,12 +151,13 @@ export default function Workflow() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <Link
+            {/* <Link
               href="/download"
               className="inline-flex items-center justify-center bg-[#75C043] hover:bg-[#86d950] text-[#1C1C1C] font-bold py-5 px-12 rounded-2xl shadow-lg transition-transform hover:scale-105 text-xl"
             >
               Get Early Access
-            </Link>
+            </Link> */}
+            <CTAButton />
           </div>
         </div>
       </div>
