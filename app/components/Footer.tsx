@@ -36,7 +36,20 @@ export default function Footer() {
     showToast("Waitlist Joined Successfully");
   };
   return (
-    <footer className="bg-[#1C1C1C] text-white pt-10 md:pt-16 overflow-hidden border-t border-ugle-slate/20">
+    <footer className="bg-[#1C1C1C] text-white pt-10 md:pt-16 overflow-hidden border-t border-ugle-slate/20 relative">
+      {/* Trust mark — floated to the right, outside the grid */}
+      <div
+        className="absolute bottom-36 right-8 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 lg:right-6 block group"
+        style={{ perspective: "400px" }}
+      >
+        <Image
+          src="/Ugle Mark White.png"
+          alt="Ugle Trust Mark"
+          width={120}
+          height={120}
+          className="size-20 md:size-min opacity-70 lg:opacity-80 rotate-10 group-hover:opacity-100 group-hover:-rotate-6 group-hover:scale-110 transition-all duration-500 ease-out drop-shadow-[0_0_16px_rgba(117,192,67,0.4)]"
+        />
+      </div>
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mb-4 md:mb-6">
           <div className="md:col-span-6 lg:col-span-5 flex flex-col">

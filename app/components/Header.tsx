@@ -38,7 +38,7 @@ export default function Header() {
       <header className="w-full border-b border-ugle-light/60 bg-white/80 backdrop-blur-md sticky top-0 z-40">
         <div className="w-full px-6 py-4 md:px-12 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex-1 flex justify-start">
+          <div className="flex-shrink-0">
             <Link
               href="/"
               className="flex items-center gap-3 transition-transform hover:scale-[1.02]"
@@ -54,7 +54,7 @@ export default function Header() {
           </div>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-ugle-slate">
+          <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-ugle-slate ml-auto">
             {menuItems.map((item) => (
               <div key={item.id} className="relative group">
                 <Link
@@ -88,7 +88,7 @@ export default function Header() {
           </nav>
 
           {/* Desktop CTAs */}
-          <div className="flex-1 hidden md:flex justify-end items-center gap-6">
+          <div className="hidden md:flex items-center gap-6 ml-8">
             <Link
               href="/request-demo"
               className="text-sm font-semibold text-ugle-slate hover:text-[#75C043] transition-colors"
