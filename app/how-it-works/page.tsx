@@ -1,3 +1,4 @@
+import { FAQSection } from "../components/sharedpages/FAQSection";
 import PageHeader from "../components/sharedpages/PageHeader";
 import Section from "../components/sharedpages/Section";
 import {
@@ -17,7 +18,11 @@ export default function page() {
       />
 
       <div className="space-y-4">
-        <Section title="01. Connect Your Archive" icon={<PlayCircle className="w-6 h-6 text-[#75C043]" />} delay={0.1}>
+        <Section
+          title="01. Connect Your Archive"
+          icon={<PlayCircle className="w-6 h-6 text-[#75C043]" />}
+          delay={0.1}
+        >
           <p>
             Connect to any local folder or online drives like -GDrive, OneDrive,
             any other online cloud storage platform. Ugle accepts MP4, MOV, MKV,
@@ -30,7 +35,11 @@ export default function page() {
           </p>
         </Section>
 
-        <Section title="02. Ugle indexes it" icon={<Laptop className="w-6 h-6 text-[#75C043]" />} delay={0.1}>
+        <Section
+          title="02. Ugle indexes it"
+          icon={<Laptop className="w-6 h-6 text-[#75C043]" />}
+          delay={0.1}
+        >
           <p>
             The transcription engine runs entirely on-device. No network
             connection required after installation.
@@ -75,7 +84,11 @@ export default function page() {
           </p>
         </Section>
 
-        <Section title="03. Search anything" icon={<Search className="w-6 h-6 text-[#75C043]" />} delay={0.1}>
+        <Section
+          title="03. Search anything"
+          icon={<Search className="w-6 h-6 text-[#75C043]" />}
+          delay={0.1}
+        >
           <p>
             Open search with{" "}
             <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded text-ugle-slate">
@@ -101,7 +114,11 @@ export default function page() {
           </p>
         </Section>
 
-        <Section title="Clip extraction" icon={<DownloadIcon className="w-6 h-6 text-[#75C043]" />} delay={0.1}>
+        <Section
+          title="Clip extraction"
+          icon={<DownloadIcon className="w-6 h-6 text-[#75C043]" />}
+          delay={0.1}
+        >
           <ul className="space-y-4 list-none p-0 text-ugle-gray">
             {[
               "Highlight any transcript passage.",
@@ -121,7 +138,11 @@ export default function page() {
           </div>
         </Section>
 
-        <Section title="The Library" icon={<FolderOpen className="w-6 h-6 text-[#75C043]" />} delay={0.1}>
+        <Section
+          title="The Library"
+          icon={<FolderOpen className="w-6 h-6 text-[#75C043]" />}
+          delay={0.1}
+        >
           <ul className="space-y-4 list-none p-0 text-ugle-gray">
             {[
               "Search across your entire Library from a single query.",
@@ -240,6 +261,36 @@ export default function page() {
           </div>
         </Section>
       </div>
+
+      <FAQSection
+        items={[
+          {
+            question: "What formats are supported?",
+            answer:
+              "Ugle supports MP4, MOV, MKV, MP3, WAV, M4A, AAC, FLAC, and OGG formats out of the box.",
+          },
+          {
+            question: "Does Ugle upload my files to the cloud?",
+            answer:
+              "No. Everything happens directly on your machine. We do not upload your media files, transcripts, or search indexes to any servers.",
+          },
+          {
+            question: "Can I move my source files after indexing?",
+            answer:
+              "If you move your source files, you will need to re-link the folder so Ugle knows where the original files are located to play them back.",
+          },
+          {
+            question: "How long does indexing take?",
+            answer:
+              "It depends on your hardware. On an Apple M-series chip, it typically takes about 4 minutes to process one hour of audio or video.",
+          },
+          {
+            question: "Does it work without an internet connection?",
+            answer:
+              "Yes. Once downloaded and installed, the transcription and indexing processes do not require an active internet connection.",
+          },
+        ]}
+      />
     </div>
   );
 }

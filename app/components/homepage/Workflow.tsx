@@ -121,7 +121,7 @@ export default function Workflow() {
         </motion.div>
 
         {/* Privacy statement */}
-        <div className="mb-16 p-10 md:p-16 bg-[#1C1C1C] rounded-3xl text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
+        <div className="mb-16 p-8 md:p-14 bg-[#1C1C1C] rounded-3xl text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 size-125 bg-[#75C043] rounded-full blur-[150px] opacity-20 transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
           <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-4 mb-8">

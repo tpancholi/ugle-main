@@ -3,6 +3,7 @@ import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 
 const manrope = Manrope({
   variable: "--font-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );
