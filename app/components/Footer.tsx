@@ -36,9 +36,9 @@ export default function Footer() {
     showToast("Waitlist Joined Successfully");
   };
   return (
-    <footer className="bg-[#1C1C1C] text-white pt-16 md:pt-24 pb-12 overflow-hidden border-t border-ugle-slate/20">
+    <footer className="bg-[#1C1C1C] text-white pt-10 md:pt-16 overflow-hidden border-t border-ugle-slate/20">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mb-16 md:mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mb-4 md:mb-6">
           <div className="md:col-span-6 lg:col-span-5 flex flex-col">
             <Image
               src="/Ugle Logo White.png"
@@ -168,7 +168,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div className="py-3 md:py-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-6">
           <div className="flex gap-4">
             <Link
               href="/privacy-policy"

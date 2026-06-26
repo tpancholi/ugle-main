@@ -235,6 +235,15 @@ export default function Header() {
               )}
             </div>
           ))}
+          <div>
+            <Link
+              href="/blog"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center w-full px-4 py-3 rounded-xl text-sm font-medium text-ugle-slate hover:bg-[#F8FAF9] hover:text-[#75C043] transition-colors"
+            >
+              Blog
+            </Link>
+          </div>
         </nav>
 
         {/* Drawer footer CTAs */}

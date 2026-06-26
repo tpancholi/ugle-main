@@ -35,7 +35,7 @@ export default function Workflow() {
   return (
     <section className="py-16 md:py-20 bg-[#F8FAF9]">
       <div className="max-w-5xl mx-auto px-6">
-        <div className="mb-16">
+        <div className="mb-8 md:mb-12">
           <div className="font-mono text-xs md:text-[13px] tracking-[0.14em] uppercase text-[#5DA233] font-medium mb-4">
             Built for the way you work
           </div>
@@ -95,7 +95,7 @@ export default function Workflow() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 md:mb-14"
         >
           {useCaseList.map((c, idx) => (
             <Link
