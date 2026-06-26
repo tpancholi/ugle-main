@@ -3,16 +3,11 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Check, Mail } from "lucide-react";
+import Link from "next/link";
 
 // ── Shared check-list row ─────────────────────────────────────────────────────
 
-function Feature({
-  text,
-  dark = false,
-}: {
-  text: string;
-  dark?: boolean;
-}) {
+function Feature({ text, dark = false }: { text: string; dark?: boolean }) {
   return (
     <div
       className={`flex items-start gap-2.5 text-[13.5px] font-medium ${dark ? "text-white/70" : "text-ugle-slate"}`}
@@ -31,7 +26,9 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
   const price = isAnnual ? "$169" : "$20";
   const origPrice = isAnnual ? "$199" : "$25";
   const period = isAnnual ? "per user, per year" : "per user, per month";
-  const loyaltyNote = isAnnual ? "loyalty renewal rate · save ~15%" : "loyalty renewal rate · save ~20%";
+  const loyaltyNote = isAnnual
+    ? "loyalty renewal rate · save ~15%"
+    : "loyalty renewal rate · save ~20%";
   const updatesNote = isAnnual
     ? "Updates included for 12 months"
     : "Updates included while subscribed";
@@ -64,16 +61,23 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
             <div>
               <div className="text-[13px] text-ugle-gray mb-0.5">{period}</div>
               <div className="flex items-baseline gap-2">
-                <span className="line-through text-ugle-gray/40 text-sm">{origPrice}</span>
+                <span className="line-through text-ugle-gray/40 text-sm">
+                  {origPrice}
+                </span>
                 <div className="text-[32px] font-extrabold text-ugle-slate tracking-tight leading-none">
                   {price}
                 </div>
               </div>
-              <div className="text-[12px] text-ugle-gray/55 mt-0.5">{loyaltyNote}</div>
+              <div className="text-[12px] text-ugle-gray/55 mt-0.5">
+                {loyaltyNote}
+              </div>
             </div>
-            <button className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors whitespace-nowrap">
+            <Link
+              href="/get-early-access"
+              className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors whitespace-nowrap"
+            >
               {isAnnual ? "Buy Annual Licence" : "Buy Monthly Licence"}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -88,15 +92,16 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
           <p className="text-[13px] text-ugle-gray mt-0.5">
             Prices shown reflect the loyalty rate for returning subscribers.
             First-time price:{" "}
-            <span className="font-semibold">{isAnnual ? "$199/year" : "$25/month"}</span>.
+            <span className="font-semibold">
+              {isAnnual ? "$199/year" : "$25/month"}
+            </span>
+            .
           </p>
         </div>
       </div>
     </div>
   );
 }
-
-
 
 // ── Organisation panel ────────────────────────────────────────────────────────
 function OrganisationPanel() {
@@ -151,13 +156,13 @@ function OrganisationPanel() {
                 tailored to your team size
               </div>
             </div>
-            <a
-              href="mailto:pricing@ugle.ai"
+            <Link
+              href="/contact"
               className="inline-flex items-center gap-2 justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
             >
               <Mail className="size-4" />
               Contact for pricing
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -226,12 +231,12 @@ function NonCommercialPanel() {
                 no approval required
               </div>
             </div>
-            <a
-              href="mailto:pricing@ugle.ai"
+            <Link
+              href="/non-commercial"
               className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
             >
               Get free access
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -299,12 +304,12 @@ function EducationPanel() {
                 pending verification &amp; approval
               </div>
             </div>
-            <a
-              href="mailto:education@ugle.ai"
+            <Link
+              href="/education"
               className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
             >
               Apply for free access
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -402,7 +407,9 @@ export default function PricingMain() {
               }`}
             >
               Annual billing
-              <span className="text-[11px] font-bold text-[#5DA233]">save ~15%</span>
+              <span className="text-[11px] font-bold text-[#5DA233]">
+                save ~15%
+              </span>
             </button>
             <button
               id="billing-monthly"
