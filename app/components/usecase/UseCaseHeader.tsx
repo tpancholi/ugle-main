@@ -15,7 +15,7 @@ export default function UseCaseHeader({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="mb-16 md:mb-24"
+      className="mb-10 md:mb-14"
     >
       {badge && (
         <div className="mb-6 text-[#75C043] font-mono text-sm font-bold uppercase tracking-wider">

@@ -14,7 +14,7 @@ export default function GlobalCTA({
   ctaLink?: string;
 }) {
   return (
-    <div className="text-center max-w-4xl mx-auto relative z-10">
+    <div className="text-center max-w-4xl mx-auto px-6 relative z-10">
       <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-ugle-slate mb-8">
         {title || (
           <>

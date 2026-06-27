@@ -1,5 +1,6 @@
 import UseCaseHeader from "@/app/components/usecase/UseCaseHeader";
 import UseCaseMain from "@/app/components/usecase/UseCaseMain";
+import UseCaseHeroImage from "@/app/components/usecase/UseCaseHeroImage";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -19,6 +20,7 @@ const USE_CASE_DATA: Record<
     title: string;
     badge: string;
     subtitle: string;
+    image: { src: string; alt: string };
     content: React.ReactNode;
     ctatitle: string;
     ctasubtitle: string;
@@ -29,9 +31,13 @@ const USE_CASE_DATA: Record<
     title: "Find the soundbite. Cut the segment. Hit the deadline.",
     badge: "Newsroom editors",
     subtitle: "Find the soundbite. Cut the segment. Hit the deadline.",
+    image: {
+      src: "/images/usecases/NewsroomEditor2.png",
+      alt: "Ugle in a newsroom — search, clip, export workflow",
+    },
     content: (
       <>
-        <p className="text-xl md:text-2xl text-ugle-slate font-medium leading-relaxed mb-12 -mt-16">
+        <p className="text-xl md:text-2xl text-ugle-slate font-medium leading-relaxed mb-12">
           The deadline is two hours away. The clip is somewhere in a 90-minute
           interview recorded three weeks ago. You remember the subject discussed
           the contract dispute — but not the timestamp.
@@ -144,9 +150,13 @@ const USE_CASE_DATA: Record<
     title: "Pull clips from 300 episodes without listening to any of them.",
     badge: "Podcast Producers",
     subtitle: "Pull clips from 300 episodes without listening to any of them.",
+    image: {
+      src: "/images/usecases/Podcasters.svg",
+      alt: "Ugle for podcast producers — search across hundreds of episodes",
+    },
     content: (
       <>
-        <p className="text-xl md:text-2xl text-ugle-slate font-medium leading-relaxed mb-12 -mt-16">
+        <p className="text-xl md:text-2xl text-ugle-slate font-medium leading-relaxed mb-12">
           Four years of recordings. Three hundred episodes averaging 90 minutes
           each. That&apos;s 450 hours of spoken content. Ugle indexes all of it
           — not the show notes, the spoken words.
@@ -213,9 +223,13 @@ const USE_CASE_DATA: Record<
     title: "A private, searchable archive of every source conversation.",
     badge: "Journalists",
     subtitle: "A private, searchable archive of every source conversation.",
+    image: {
+      src: "/images/usecases/Journalist.svg",
+      alt: "Ugle for journalists — private, local, searchable source archive",
+    },
     content: (
       <>
-        <p className="text-xl md:text-2xl text-ugle-slate font-medium leading-relaxed mb-12 -mt-16">
+        <p className="text-xl md:text-2xl text-ugle-slate font-medium leading-relaxed mb-12">
           Seven years of source recordings. Every word spoken is retrievable —
           not by filename or date, but by what was actually said. A source
           mentioned a name four months ago. Find it in 30ms.
@@ -347,6 +361,8 @@ export default async function UseCasePage({
           title={useCase.title}
           subtitle={useCase.subtitle}
         />
+
+        <UseCaseHeroImage src={useCase.image.src} alt={useCase.image.alt} />
 
         <UseCaseMain>{useCase.content}</UseCaseMain>
       </div>
