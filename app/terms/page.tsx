@@ -1,4 +1,4 @@
-import TOS from "@/app/markdown/TOS.md";
+import TermsofService from "@/app/markdown/Terms of Service.md";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function TOSPage() {
-  return <TOS />;
+  return <TermsofService />;
 }

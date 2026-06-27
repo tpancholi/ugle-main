@@ -1,14 +1,13 @@
 # **Privacy Policy**
 
- **Last Updated:** 27 June 2026  
- **Company:** Deepshield AI Technology LLP  
- **Registered Office:** 40, Oriyant Colony, Bhuj, Kachchh, Gujarat 370001, India  
- **Contact:** privacy@ugle.ai  
- **Privacy and Grievance Contact:** privacy@ugle.ai
+**Last Updated:** June 2026  
+**Company:** Deepshield AI Technology LLP  
+**Registered Office:** 40 Oriyant Colony Bhuj Kachchh Bhuj Bhuj Kachchh Gujarat 370001  
+**Contact:** privacy@ugle.ai
 
 ## **1\. Introduction**
 
-This Privacy Policy explains how Deepshield AI Technology LLP, referred to as “Ugle”, “we”, “us”, or “our”, collects, uses, stores, shares, and protects personal information when you visit our website, download our software, purchase a licence, activate Ugle, contact support, or use related services.
+This Privacy Policy explains how Deepshield AI Technology LLP referred to as “Ugle”, “we”, “us”, or “our” collects, uses, stores, shares, and protects personal information when you visit our website, download our software, purchase a licence, activate Ugle, contact support, or use related services.
 
 Ugle is designed as a local-first desktop software product. Your files remain on your device. We do not upload, access, store, analyse, sell, or use your audio files, video files, transcripts, indexed files, search queries, or local search results.
 
@@ -53,7 +52,7 @@ We do not use your content for advertising, analytics, profiling, benchmarking, 
 
 We collect limited information that is necessary to operate Ugle, process purchases, activate licences, provide support, deliver updates, and maintain product security.
 
-## **4.1 Information you provide to us**
+### **4.1 Information you provide to us**
 
 We may collect information you provide directly, including:
 
@@ -69,32 +68,24 @@ We may collect information you provide directly, including:
 
 Please do not send confidential files, recordings, transcripts, legal documents, client material, or sensitive content to Ugle support unless you intentionally choose to do so.
 
-## **4.2 Licence and activation information**
+### **4.2 Licence and activation information**
 
-When you purchase or activate Ugle, we may collect and process licence-related information, including:
+When you purchase or activate Ugle, we may collect:
 
 1. Email address.  
 2. Licence key.  
 3. Licence tier.  
 4. Activation date.  
 5. Device activation count.  
-6. Hardware-derived or software-derived device identifier.  
+6. Hardware-derived device identifier.  
 7. Software version.  
 8. Operating system version.  
 9. Purchase status.  
 10. Renewal or validity status, where applicable.
 
-We use Keygen, a third-party software licensing provider, to help issue, validate, manage, and enforce Ugle licences.
+The hardware-derived device identifier is used only for licence validation and fraud prevention. It is not used to identify your files, monitor your behaviour, track your usage, or profile you.
 
-Licence activation may require Ugle to communicate with Keygen to verify whether your licence is valid, active, expired, revoked, or within permitted device limits.
-
-Depending on the implementation, licence validation may involve sending limited licence and device activation information to Keygen, such as your licence key, email address, licence tier, device activation record, software version, operating system version, IP address, and a hashed or hardware-derived device identifier.
-
-The device identifier is used only for licence validation, device limit enforcement, fraud prevention, and licence support. It is not used to identify your files, monitor your behaviour, track your usage, analyse your content, or profile you.
-
-Ugle does not send your audio files, video files, transcripts, local indexes, search queries, search results, indexed file names, folder paths, or local media archive content to Keygen.
-
-## **4.3 Payment information**
+### **4.3 Payment information**
 
 Payments may be processed through Stripe or another payment processor shown at checkout.
 
@@ -110,7 +101,7 @@ We may receive payment-related information such as:
 
 We do not store your full card number, CVV, or full payment credentials. Payment processing is handled by the payment processor under its own terms and privacy policy.
 
-## **4.4 Website and download information**
+### **4.4 Website and download information**
 
 When you visit our website or download the installer, we or our service providers may collect basic technical information, such as:
 
@@ -127,7 +118,7 @@ When you visit our website or download the installer, we or our service provider
 
 This information is used for website delivery, download reliability, security, fraud prevention, abuse detection, and operational maintenance.
 
-## **4.5 Optional crash reports**
+### **4.5 Optional crash reports**
 
 If Ugle crashes, we may ask whether you want to submit a crash report.
 
@@ -144,7 +135,7 @@ Crash reports are designed not to include your audio files, video files, transcr
 
 Crash reporting is optional unless otherwise clearly stated.
 
-## **4.6 Support communications**
+### **4.6 Support communications**
 
 If you contact us for support, we may collect information needed to help you, including:
 
@@ -252,25 +243,18 @@ We may use trusted third-party service providers for limited operational purpose
 
 These may include:
 
-1. Keygen for software licence generation, licence validation, device activation, entitlement management, and licence enforcement.  
-2. Payment processors such as Stripe or another payment processor shown at checkout.  
-3. Website hosting providers.  
-4. Content delivery networks for installer delivery.  
-5. Email service providers.  
-6. Customer support tools.  
-7. Crash reporting providers, where enabled.  
-8. Tax, accounting, and invoicing providers.  
-9. Security and fraud prevention tools.
-
-Keygen may process limited licence-related and device activation information required to validate your licence and enforce device limits. This may include licence key, email address, licence status, licence tier, activation information, software version, operating system version, IP address, and device identifier.
-
-Payment processors may process payment-related information required to complete your purchase, issue receipts, manage refunds, and comply with tax, fraud prevention, and financial obligations.
+1. Payment processors such as Stripe.  
+2. Website hosting providers.  
+3. Content delivery networks for installer delivery.  
+4. Email service providers.  
+5. Customer support tools.  
+6. Crash reporting providers, where enabled.  
+7. Tax, accounting, and invoicing providers.  
+8. Security and fraud prevention tools.
 
 These providers process information only for the purposes required to provide their services to us.
 
 We do not route your local content through these providers.
-
-Ugle does not send your audio files, video files, transcripts, local indexes, search queries, search results, indexed file names, folder paths, or local media archive content to Keygen, Stripe, hosting providers, CDN providers, email tools, support tools, or crash reporting providers.
 
 ## **11\. Sharing of information**
 
@@ -280,25 +264,20 @@ We do not share your local content because we do not receive it.
 
 We may share limited personal information with:
 
-1. Keygen for licence activation, validation, entitlement management, device limit enforcement, fraud prevention, and licence support.  
-2. Payment processors.  
-3. Hosting providers.  
-4. CDN providers.  
-5. Email and support tools.  
-6. Professional advisers.  
-7. Tax, accounting, and audit service providers.  
-8. Legal, regulatory, or government authorities where required by law.  
-9. Third parties involved in a merger, acquisition, restructuring, financing, or sale of business assets.
+1. Payment processors.  
+2. Hosting providers.  
+3. CDN providers.  
+4. Email and support tools.  
+5. Professional advisers.  
+6. Tax, accounting, and audit service providers.  
+7. Legal, regulatory, or government authorities where required by law.  
+8. Third parties involved in a merger, acquisition, restructuring, financing, or sale of business assets.
 
 Any sharing is limited to what is reasonably necessary for the relevant purpose.
 
 ## **12\. International transfers**
 
 Some service providers may process information outside India.
-
-Licence activation information processed through Keygen may be processed outside India, including in jurisdictions where Keygen or its infrastructure providers operate.
-
-Payment, support, hosting, email, download, analytics, diagnostics, tax, accounting, and security providers may also process limited information outside India depending on where they operate.
 
 Where personal information is transferred outside India, we will take reasonable steps required under applicable law to ensure that such information receives appropriate protection.
 
@@ -320,14 +299,6 @@ These safeguards may include:
 8. Secure software distribution practices.
 
 No system is completely secure. You are responsible for securing your own device, local files, passwords, operating system, user account, backup systems, and exported data.
-
-## **13.1 Personal data breach**
-
-If we become aware of a personal data breach affecting personal information processed by Ugle, we will take reasonable steps to assess, contain, investigate, and remediate the incident.
-
-Where required under applicable law, we will notify affected users and the relevant authority within the timelines prescribed by law.
-
-This does not apply to local files, transcripts, indexes, search queries, search results, or content stored only on your device, because Ugle does not receive or control that content.
 
 ## **14\. Data retention**
 
@@ -379,14 +350,13 @@ We aim to complete deletion requests within 7 business days, unless we need to r
 
 Important: deleting account data may deactivate your licence and prevent continued use of Ugle.
 
-Deletion of your account data may also require deletion, deactivation, or modification of licence records maintained through Keygen where applicable. Some records may be retained where necessary for legal, tax, accounting, fraud prevention, dispute resolution, or compliance purposes.
-
 ## **18\. Grievance redressal**
 
-If you have any concern, complaint, or grievance about how we process your personal information, contact our Privacy and Grievance Contact:
+If you have any concern, complaint, or grievance about how we process your personal information, contact our Grievance Officer:
 
-**Email:** privacy@ugle.ai  
- **Address:** 40, Oriyant Colony, Bhuj, Kachchh, Gujarat 370001, India
+**Name:** \[Grievance Officer Name\]  
+**Email:** \[grievance@ugle.ai\]  
+**Address:** \[Registered Office Address\]
 
 We will review and respond to grievances in accordance with applicable Indian law.
 
@@ -419,7 +389,7 @@ Ugle does not access the content processed locally by business or team users.
 
 Because Ugle does not possess your local content, we cannot provide your audio files, video files, transcripts, search queries, search results, indexed files, or local indexes in response to legal requests.
 
-We may disclose limited account, licence, payment, support, activation, technical, or device validation information if required by valid legal process or applicable law.
+We may disclose limited account, licence, payment, support, or technical information if required by valid legal process or applicable law.
 
 ## **22\. Changes to this Privacy Policy**
 
@@ -445,10 +415,5 @@ For legal notices:
 
 For grievances:
 
-**privacy@ugle.ai**
-
-Legal notices may also be sent to:
-
-**Deepshield AI Technology LLP**  
- 40, Oriyant Colony, Bhuj, Kachchh, Gujarat 370001, India
+**\[grievance@ugle.ai\]**
 
