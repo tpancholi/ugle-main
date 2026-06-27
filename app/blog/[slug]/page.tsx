@@ -1,16 +1,26 @@
 import React from "react";
 import BlogPost from "@/app/components/blog/BlogPost";
+import SocialShare from "@/app/components/blog/SocialShare";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 const BLOG_POST_DATA: Record<
   string,
-  { title: string; meta: string; content: React.ReactNode }
+  {
+    title: string;
+    meta: string;
+    tag: string;
+    image: string;
+    content: React.ReactNode;
+  }
 > = {
   "why-local-first": {
     title: "Why we built Ugle local-first",
-    meta: "4 min read · Product philosophy",
+    meta: "4 min read",
+    tag: "Product philosophy",
+    image: "/images/blogs/Why we built Ugle local-first.svg",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
@@ -49,7 +59,7 @@ const BLOG_POST_DATA: Record<
           the user&apos;s actual situation.
         </p>
 
-        <div className="mt-14 p-10 bg-[#3A3A3A] text-white rounded-2xl text-center shadow-lg">
+        <div className="not-prose mt-14 p-10 bg-[#3A3A3A] text-white rounded-2xl text-center shadow-lg">
           <h3 className="text-[22px] font-bold mb-2 text-white mt-0 border-0">
             Index once. Search forever.
           </h3>
@@ -62,7 +72,9 @@ const BLOG_POST_DATA: Record<
   },
   "cost-of-scrubbing-timelines": {
     title: "The real cost of scrubbing timelines",
-    meta: "3 min read · Workflow",
+    meta: "3 min read",
+    tag: "Workflow",
+    image: "/images/blogs/The real cost of scrubbing timelines.svg",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
@@ -106,7 +118,9 @@ const BLOG_POST_DATA: Record<
   },
   "what-transcription-accuracy-means": {
     title: "What 95% transcription accuracy actually means",
-    meta: "5 min read · Product",
+    meta: "5 min read",
+    tag: "Product",
+    image: "/images/blogs/What transcription accuracy actually means.svg",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
@@ -226,13 +240,34 @@ export default async function page({
         <ArrowRight className="w-4 h-4 mr-2 rotate-180" strokeWidth={2.5} />{" "}
         Back to Blog
       </Link>
-      <div className="text-[13px] font-mono text-ugle-gray mb-4">
-        {blogPost.meta}
+      <div className="text-[13px] font-mono text-ugle-gray mb-3 flex items-center gap-2">
+        <span className="inline-block bg-[#75C043]/10 text-[#5DA233] text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+          {blogPost.tag}
+        </span>
+        <span>{blogPost.meta}</span>
       </div>
-      <h1 className="text-[36px] md:text-[46px] font-extrabold tracking-[-0.02em] mb-12 text-ugle-slate leading-[1.1]">
+      <h1 className="text-[36px] md:text-[46px] font-extrabold tracking-[-0.02em] mb-10 text-ugle-slate leading-[1.1]">
         {blogPost.title}
       </h1>
+
+      {/* Hero image */}
+      <div className="relative w-full rounded-2xl overflow-hidden border border-ugle-light/60 shadow-sm mb-14 aspect-video bg-[#F0F2F0]">
+        <Image
+          src={blogPost.image}
+          alt={blogPost.title}
+          fill
+          className="object-cover object-top"
+          priority
+          sizes="(max-width: 768px) 100vw, 768px"
+        />
+      </div>
+
       <BlogPost>{blogPost.content}</BlogPost>
+
+      <SocialShare
+        title={blogPost.title}
+        url={`https://ugle.app/blog/${slug}`}
+      />
     </div>
   );
 }
