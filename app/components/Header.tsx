@@ -38,7 +38,7 @@ export default function Header() {
       <header className="w-full border-b border-ugle-light/60 bg-white/80 backdrop-blur-md sticky top-0 z-40">
         <div className="w-full px-6 py-4 md:px-12 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link
               href="/"
               className="flex items-center gap-3 transition-transform hover:scale-[1.02]"
