@@ -52,7 +52,16 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
           <div className="space-y-3">
             <Feature text="1 personal licence" />
             <Feature text="Unlimited library size" />
-            <Feature text="90+ languages" />
+            <Link
+              href="/blog/languages-supported"
+              className="flex items-start gap-2.5 text-[13.5px] font-medium text-ugle-green"
+            >
+              <Check
+                className={`size-3.5 shrink-0 mt-0.5 text-[#5DA233]`}
+                strokeWidth={2.5}
+              />
+              <span>90+ languages</span>
+            </Link>
             <Feature text="Clip export included" />
             <Feature text={updatesNote} />
           </div>

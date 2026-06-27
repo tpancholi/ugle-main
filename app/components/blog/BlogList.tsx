@@ -7,6 +7,15 @@ import Link from "next/link";
 
 const blogItems = [
   {
+    path: "/blog/languages-supported",
+    slug: "languages-supported",
+    title: "The 90+ Languages Supported by Ugle",
+    desc: "A search tool is only as useful as the language it can index. From the start, we designed Ugle's local-first engine to recognize more than just English — over 90 languages, entirely on-device.",
+    meta: "4 min read",
+    tag: "Product",
+    image: "/images/blogs/The 90+ Languages Supported by Ugle.png",
+  },
+  {
     path: "/blog/why-local-first",
     slug: "why-local-first",
     title: "Why we built Ugle local-first",

@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import GlobalCTA from "@/app/components/GlobalCTA";
 
 const BLOG_POST_DATA: Record<
   string,
@@ -217,6 +218,176 @@ const BLOG_POST_DATA: Record<
       </>
     ),
   },
+  "languages-supported": {
+    title: "The 90+ Languages Supported by Ugle",
+    meta: "4 min read",
+    tag: "Product",
+    image: "/images/blogs/The 90+ Languages Supported by Ugle.png",
+    content: (
+      <>
+        <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
+          A search tool is only as useful as the language it can index. From the
+          start, we designed Ugle&apos;s local-first engine to recognize more
+          than just English. By utilizing highly optimized transcription models,
+          Ugle can handle over 90 languages right on your machine.
+        </p>
+        <p>
+          Whether you are transcribing an interview in Spanish, analyzing a
+          podcast in Japanese, or archiving historical footage in Welsh, Ugle
+          extracts the text securely without ever sending a byte to the cloud.
+        </p>
+
+        <div className="not-prose my-10 p-8 md:p-10 rounded-2xl bg-[#1C1C1C] text-white flex flex-col sm:flex-row items-center gap-6 shadow-lg">
+          <div className="text-center sm:text-left shrink-0">
+            <p className="text-[52px] font-extrabold text-[#75C043] leading-none tracking-tight">
+              90+
+            </p>
+            <p className="text-[14px] font-mono text-white/60 uppercase tracking-widest mt-1">
+              Languages
+            </p>
+          </div>
+          <div className="w-px self-stretch bg-white/10 hidden sm:block" />
+          <p className="text-[17px] text-white/80 leading-relaxed font-light">
+            Every language is processed on-device at the same speed and quality.
+            No internet required. No per-language pricing.
+          </p>
+        </div>
+
+        <h2>Fully Supported Languages</h2>
+        <p>
+          Below is the complete list of languages our transcription model
+          supports. This coverage allows international newsrooms and global
+          research teams to rely on one tool for their entire archive.
+        </p>
+
+        <div className="not-prose my-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          {[
+            "English",
+            "Chinese",
+            "German",
+            "Spanish",
+            "Russian",
+            "Korean",
+            "French",
+            "Japanese",
+            "Portuguese",
+            "Turkish",
+            "Polish",
+            "Catalan",
+            "Dutch",
+            "Arabic",
+            "Swedish",
+            "Italian",
+            "Indonesian",
+            "Hindi",
+            "Finnish",
+            "Vietnamese",
+            "Hebrew",
+            "Ukrainian",
+            "Greek",
+            "Malay",
+            "Czech",
+            "Romanian",
+            "Danish",
+            "Hungarian",
+            "Tamil",
+            "Norwegian",
+            "Thai",
+            "Urdu",
+            "Croatian",
+            "Bulgarian",
+            "Lithuanian",
+            "Latin",
+            "Māori",
+            "Malayalam",
+            "Welsh",
+            "Slovak",
+            "Telugu",
+            "Persian",
+            "Latvian",
+            "Bengali",
+            "Serbian",
+            "Azerbaijani",
+            "Slovenian",
+            "Kannada",
+            "Estonian",
+            "Macedonian",
+            "Breton",
+            "Basque",
+            "Icelandic",
+            "Armenian",
+            "Nepali",
+            "Mongolian",
+            "Bosnian",
+            "Kazakh",
+            "Albanian",
+            "Swahili",
+            "Galician",
+            "Marathi",
+            "Panjabi",
+            "Sinhala",
+            "Khmer",
+            "Shona",
+            "Yoruba",
+            "Somali",
+            "Afrikaans",
+            "Occitan",
+            "Georgian",
+            "Belarusian",
+            "Tajik",
+            "Sindhi",
+            "Gujarati",
+            "Amharic",
+            "Yiddish",
+            "Lao",
+            "Uzbek",
+            "Faroese",
+            "Haitian",
+            "Pashto",
+            "Turkmen",
+            "Norwegian Nynorsk",
+            "Maltese",
+            "Sanskrit",
+            "Luxembourgish",
+            "Burmese",
+            "Tibetan",
+            "Tagalog",
+            "Malagasy",
+            "Assamese",
+            "Tatar",
+            "Hawaiian",
+            "Lingala",
+            "Hausa",
+            "Bashkir",
+            "jw",
+            "Sundanese",
+          ].map((lang) => (
+            <span
+              key={lang}
+              className="inline-flex items-center px-3 py-2 rounded-lg bg-[#F0F4EE] border border-[#75C043]/20 text-[13.5px] font-medium text-ugle-slate hover:bg-[#75C043]/10 transition-colors"
+            >
+              {lang}
+            </span>
+          ))}
+        </div>
+
+        <p>
+          As our models improve, this list will grow. And because the models run
+          locally, you will never be charged a premium for transcribing less
+          common languages.
+        </p>
+
+        <div className="not-prose mt-14 p-10 bg-[#3A3A3A] text-white rounded-2xl text-center shadow-lg">
+          <h3 className="text-[22px] font-bold mb-2 text-white">
+            A truly global archive.
+          </h3>
+          <p className="text-[#c3c5cd] text-[17px] mb-0 max-w-md mx-auto">
+            No language packs to download. No internet required.
+          </p>
+        </div>
+      </>
+    ),
+  },
 };
 
 export default async function page({
@@ -232,42 +403,50 @@ export default async function page({
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-20 pb-32">
-      <Link
-        href="/blog"
-        className="inline-flex items-center text-[15px] font-semibold text-ugle-gray hover:text-[#5DA233] transition-colors mb-12"
-      >
-        <ArrowRight className="w-4 h-4 mr-2 rotate-180" strokeWidth={2.5} />{" "}
-        Back to Blog
-      </Link>
-      <div className="text-[13px] font-mono text-ugle-gray mb-3 flex items-center gap-2">
-        <span className="inline-block bg-[#75C043]/10 text-[#5DA233] text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
-          {blogPost.tag}
-        </span>
-        <span>{blogPost.meta}</span>
-      </div>
-      <h1 className="text-[36px] md:text-[46px] font-extrabold tracking-[-0.02em] mb-10 text-ugle-slate leading-[1.1]">
-        {blogPost.title}
-      </h1>
+    <>
+      <div className="max-w-3xl mx-auto px-6 py-20 pb-32">
+        <Link
+          href="/blog"
+          className="inline-flex items-center text-[15px] font-semibold text-ugle-gray hover:text-[#5DA233] transition-colors mb-12"
+        >
+          <ArrowRight className="w-4 h-4 mr-2 rotate-180" strokeWidth={2.5} />{" "}
+          Back to Blog
+        </Link>
+        <div className="text-[13px] font-mono text-ugle-gray mb-3 flex items-center gap-2">
+          <span className="inline-block bg-[#75C043]/10 text-[#5DA233] text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+            {blogPost.tag}
+          </span>
+          <span>{blogPost.meta}</span>
+        </div>
+        <h1 className="text-[36px] md:text-[46px] font-extrabold tracking-[-0.02em] mb-10 text-ugle-slate leading-[1.1]">
+          {blogPost.title}
+        </h1>
 
-      {/* Hero image */}
-      <div className="relative w-full rounded-2xl overflow-hidden border border-ugle-light/60 shadow-sm mb-14 aspect-video bg-[#F0F2F0]">
-        <Image
-          src={blogPost.image}
-          alt={blogPost.title}
-          fill
-          className="object-cover object-top"
-          priority
-          sizes="(max-width: 768px) 100vw, 768px"
+        {/* Hero image */}
+        <div className="relative w-full rounded-2xl overflow-hidden border border-ugle-light/60 shadow-sm mb-14 aspect-video bg-[#F0F2F0]">
+          <Image
+            src={blogPost.image}
+            alt={blogPost.title}
+            fill
+            className="object-cover object-top"
+            priority
+            sizes="(max-width: 768px) 100vw, 768px"
+          />
+        </div>
+
+        <BlogPost>{blogPost.content}</BlogPost>
+
+        <SocialShare
+          title={blogPost.title}
+          url={`https://ugle.app/blog/${slug}`}
         />
       </div>
-
-      <BlogPost>{blogPost.content}</BlogPost>
-
-      <SocialShare
-        title={blogPost.title}
-        url={`https://ugle.app/blog/${slug}`}
-      />
-    </div>
+      <section className="w-full border-t border-ugle-light/60 bg-[#F8FAF9] py-16 md:py-20">
+        <GlobalCTA
+          title="Take control of your media."
+          subtitle="Join the early access program and see for yourself."
+        />
+      </section>
+    </>
   );
 }

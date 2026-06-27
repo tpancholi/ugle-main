@@ -1,3 +1,4 @@
+import Link from "next/link";
 import GlobalCTA from "../components/GlobalCTA";
 import { FAQSection } from "../components/sharedpages/FAQSection";
 import PageHeader from "../components/sharedpages/PageHeader";
@@ -203,7 +204,13 @@ export default function page() {
                     </td>
                     <td className="py-4 px-6 text-ugle-gray">
                       90+ including English, Spanish, French, German, Arabic,
-                      Hindi, Mandarin, Japanese, Portuguese.
+                      Hindi, Mandarin, Japanese{" "}
+                      <Link
+                        href="/blog/languages-supported"
+                        className="text-ugle-green"
+                      >
+                        & more.
+                      </Link>
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
