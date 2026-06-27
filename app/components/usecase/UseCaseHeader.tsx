@@ -25,9 +25,9 @@ export default function UseCaseHeader({
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-ugle-slate leading-tight">
         {title}
       </h1>
-      <p className="text-xl md:text-2xl text-ugle-gray max-w-3xl leading-relaxed">
+      {/* <p className="text-xl md:text-2xl text-ugle-gray max-w-3xl leading-relaxed">
         {subtitle}
-      </p>
+      </p> */}
     </motion.div>
   );
 }

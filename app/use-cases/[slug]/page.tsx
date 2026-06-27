@@ -6,6 +6,8 @@ import React from "react";
 import { notFound } from "next/navigation";
 import GlobalCTA from "@/app/components/GlobalCTA";
 import { FAQSection } from "@/app/components/sharedpages/FAQSection";
+import AnimatedWorkflowList from "@/app/components/usecase/AnimatedWorkflowList";
+import AnimatedPairedWorkflow from "@/app/components/usecase/AnimatedPairedWorkflow";
 
 export function generateStaticParams() {
   return [{ slug: "newsrooms" }, { slug: "podcasts" }, { slug: "journalists" }];
@@ -24,8 +26,8 @@ const USE_CASE_DATA: Record<
   }
 > = {
   newsrooms: {
-    title: "Newsroom editors",
-    badge: "USE CASE",
+    title: "Find the soundbite. Cut the segment. Hit the deadline.",
+    badge: "Newsroom editors",
     subtitle: "Find the soundbite. Cut the segment. Hit the deadline.",
     content: (
       <>
@@ -35,37 +37,31 @@ const USE_CASE_DATA: Record<
           the contract dispute — but not the timestamp.
         </p>
 
-        <p>
-          Type <em>&apos;contract dispute&apos;</em> in Ugle. Every matching
-          moment across every indexed file, returned in 30ms. Click to play.
-          Export. Done.
-        </p>
+        <div className="not-prose bg-[#1C1C1C] text-white p-8 md:p-12 rounded-2xl mb-16 shadow-lg">
+          <p className="text-xl md:text-2xl font-light leading-relaxed text-white">
+            Type{" "}
+            <span className="text-[#75C043] font-mono font-bold bg-[#75C043]/10 px-2 py-1 rounded">
+              contract dispute
+            </span>{" "}
+            in Ugle. Every matching moment across every indexed file, returned
+            in 30ms. Click to play. Export. Done.
+          </p>
+        </div>
 
         <h2 className="text-2xl font-bold mt-16 mb-6 text-ugle-slate">
           Workflow Example
         </h2>
-        <div className="bg-[#F8FAF9] p-8 md:p-10 rounded-2xl border border-ugle-light/60 my-8">
-          <ol className="space-y-6 list-decimal pl-5 text-ugle-slate font-medium marker:text-[#75C043] marker:font-bold">
-            <li className="pl-4 pb-4 border-b border-ugle-light/40">
-              14 clips arrive — total 6 hours of footage.
-            </li>
-            <li className="pl-4 pb-4 border-b border-ugle-light/40">
-              Drop the folder into Ugle. Indexing starts in the background.
-            </li>
-            <li className="pl-4 pb-4 border-b border-ugle-light/40">
-              Continue other work. Notification: indexing complete.
-            </li>
-            <li className="pl-4 pb-4 border-b border-ugle-light/40">
-              Search &apos;planning permission objection&apos;. 4 results across
-              3 files.
-            </li>
-            <li className="pl-4 pb-4 border-b border-ugle-light/40">
-              Preview both usable takes in Ugle. Select the cleaner one.
-            </li>
-            <li className="pl-4">
-              Export as MP3. Send to producer. Deadline met.
-            </li>
-          </ol>
+        <div className="not-prose bg-[#F8FAF9] p-8 md:p-10 rounded-2xl border border-ugle-light/60 my-8">
+          <AnimatedWorkflowList
+            items={[
+              "14 clips arrive — total 6 hours of footage.",
+              "Drop the folder into Ugle. Indexing starts in the background.",
+              "Continue other work. Notification: indexing complete.",
+              "Search \u2018planning permission objection\u2019. 4 results across 3 files.",
+              "Preview both usable takes in Ugle. Select the cleaner one.",
+              "Export as MP3. Send to producer. Deadline met.",
+            ]}
+          />
         </div>
 
         <h2 className="text-2xl font-bold mt-16 mb-6 text-ugle-slate">
@@ -145,8 +141,8 @@ const USE_CASE_DATA: Record<
     ctaText: "Request a demo",
   },
   podcasts: {
-    title: "Podcast producers",
-    badge: "USE CASE",
+    title: "Pull clips from 300 episodes without listening to any of them.",
+    badge: "Podcast Producers",
     subtitle: "Pull clips from 300 episodes without listening to any of them.",
     content: (
       <>
@@ -156,46 +152,32 @@ const USE_CASE_DATA: Record<
           — not the show notes, the spoken words.
         </p>
 
-        <p>
-          Building a compilation episode on housing policy? Search{" "}
-          <em>&apos;rent control&apos;</em>. 23 results across 18 episodes.
-          Preview, select, export. 22 minutes. Previously: half a day.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-16 not-prose">
-          <div className="bg-[#F8FAF9] p-8 md:p-10 rounded-2xl border border-ugle-light/60">
-            <h2 className="text-xl font-bold mb-6 text-ugle-slate">
-              Workflow: Compilation
-            </h2>
-            <ol className="space-y-4 list-decimal pl-5 text-ugle-slate font-medium marker:text-[#75C043] marker:font-bold">
-              <li className="pl-2">
-                Search &apos;rent control&apos;. 23 results across 18 episodes.
-              </li>
-              <li className="pl-2">
-                Filter to results over 45 seconds of continuous speech.
-              </li>
-              <li className="pl-2">Preview 8 candidates. Select 4.</li>
-              <li className="pl-2">
-                Export as MP3 with timestamps for the editor.
-              </li>
-            </ol>
-          </div>
-          <div className="bg-[#F8FAF9] p-8 md:p-10 rounded-2xl border border-ugle-light/60">
-            <h2 className="text-xl font-bold mb-6 text-ugle-slate">
-              Workflow: Guest Research
-            </h2>
-            <ol className="space-y-4 list-decimal pl-5 text-ugle-slate font-medium marker:text-[#75C043] marker:font-bold">
-              <li className="pl-2">
-                Guest returning after 18 months. Search their name.
-              </li>
-              <li className="pl-2">Previous episode surfaces instantly.</li>
-              <li className="pl-2">
-                Scan transcript for threads to revisit and topics to avoid in
-                the upcoming interview.
-              </li>
-            </ol>
-          </div>
+        <div className="not-prose bg-[#1C1C1C] text-white p-8 md:p-12 rounded-2xl mb-16 shadow-lg">
+          <p className="text-xl md:text-2xl font-light leading-relaxed text-white">
+            Building a compilation episode on housing policy? Search{" "}
+            <span className="text-[#75C043] font-mono font-bold bg-[#75C043]/10 px-2 py-1 rounded">
+              rent control
+            </span>{" "}
+            . 23 results across 18 episodes. Preview, select, export. 22
+            minutes. Previously: half a day.
+          </p>
         </div>
+
+        <AnimatedPairedWorkflow
+          leftTitle="Workflow: Compilation"
+          leftItems={[
+            "Search \u2018rent control\u2019. 23 results across 18 episodes.",
+            "Filter to results over 45 seconds of continuous speech.",
+            "Preview 8 candidates. Select 4.",
+            "Export as MP3 with timestamps for the editor.",
+          ]}
+          rightTitle="Workflow: Guest Research"
+          rightItems={[
+            "Guest returning after 18 months. Search their name.",
+            "Previous episode surfaces instantly.",
+            "Scan transcript for threads to revisit and topics to avoid in the upcoming interview.",
+          ]}
+        />
 
         <FAQSection
           items={[
@@ -228,8 +210,8 @@ const USE_CASE_DATA: Record<
     ctaText: "Get Ugle for Podcasts",
   },
   journalists: {
-    title: "Journalists",
-    badge: "USE CASE",
+    title: "A private, searchable archive of every source conversation.",
+    badge: "Journalists",
     subtitle: "A private, searchable archive of every source conversation.",
     content: (
       <>
@@ -239,10 +221,12 @@ const USE_CASE_DATA: Record<
           mentioned a name four months ago. Find it in 30ms.
         </p>
 
-        <p>
-          Because Ugle runs entirely on-device, source protection is
-          architectural. No server to subpoena. No cloud storage to breach.
-        </p>
+        <div className="not-prose bg-[#1C1C1C] text-white p-8 md:p-12 rounded-2xl mb-16 shadow-lg">
+          <p className="text-xl md:text-2xl font-light leading-relaxed text-white">
+            Because Ugle runs entirely on-device, source protection is
+            architectural. No server to subpoena. No cloud storage to breach.
+          </p>
+        </div>
 
         <h2 className="text-2xl font-bold mt-16 mb-6 text-ugle-slate">
           Technical reality
