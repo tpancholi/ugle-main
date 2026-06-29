@@ -7,15 +7,6 @@ import Link from "next/link";
 
 const blogItems = [
   {
-    path: "/blog/languages-supported",
-    slug: "languages-supported",
-    title: "The 90+ Languages Supported by Ugle",
-    desc: "A search tool is only as useful as the language it can index. From the start, we designed Ugle's local-first engine to recognize more than just English — over 90 languages, entirely on-device.",
-    meta: "4 min read",
-    tag: "Product",
-    image: "/images/blogs/The 90+ Languages Supported by Ugle.png",
-  },
-  {
     path: "/blog/why-local-first",
     slug: "why-local-first",
     title: "Why we built Ugle local-first",
@@ -32,6 +23,15 @@ const blogItems = [
     meta: "3 min read",
     tag: "Workflow",
     image: "/images/blogs/The real cost of scrubbing timelines.svg",
+  },
+  {
+    path: "/blog/languages-supported",
+    slug: "languages-supported",
+    title: "The 90+ Languages Supported by Ugle",
+    desc: "A search tool is only as useful as the language it can index. From the start, we designed Ugle's local-first engine to recognize more than just English — over 90 languages, entirely on-device.",
+    meta: "4 min read",
+    tag: "Product",
+    image: "/images/blogs/The 90+ Languages Supported by Ugle.png",
   },
   {
     path: "/blog/what-transcription-accuracy-means",
@@ -94,7 +94,7 @@ export default function BlogList() {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-[22px] md:text-[26px] font-bold mb-3 text-ugle-slate group-hover:text-[#5DA233] transition-colors leading-[1.25]">
+                <h2 className="text-[22px] md:text-[26px] font-bold mb-3 text-ugle-slate group-hover:text-[#5DA233] transition-colors leading-tight">
                   {post.title}
                 </h2>
 
