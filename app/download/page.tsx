@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import DownloadButton from "@/app/components/DownloadButton";
 
 export default function DownloadPage() {
   return (
@@ -20,25 +20,19 @@ export default function DownloadPage() {
             Free. No account. No upload.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 mb-24">
-            <Link href="/get-early-access">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center justify-center gap-3 border-b-2 border-white/20 hover:border-white/60 text-white font-bold py-4 px-6 text-lg transition-colors w-full"
-              >
-                [ Get Early access for macOS &darr; ]
-              </motion.button>
-            </Link>
-            <Link href="/get-early-access">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center justify-center gap-3 border-b-2 border-white/20 hover:border-white/60 text-white font-bold py-4 px-6 text-lg transition-colors w-full"
-              >
-                [ Get Early access for Windows &darr; ]
-              </motion.button>
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-4 mb-24">
+            <DownloadButton
+              platform="macos"
+              variant="filled"
+              size="sm"
+              href="/get-early-access"
+            />
+            <DownloadButton
+              platform="windows"
+              variant="outline"
+              size="sm"
+              href="/get-early-access"
+            />
           </div>
         </motion.div>
 
