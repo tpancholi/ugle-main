@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "motion/react";
+import Image from "next/image";
 
 const heroStats = [
   {
@@ -48,7 +49,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="max-w-5xl mx-auto px-6 py-16 md:py-24 relative z-10 text-center">
+    <section className="max-w-7xl mx-auto px-6 py-16 md:py-24 relative z-10 text-center">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -58,11 +59,26 @@ export default function Hero() {
         <div className="space-y-6 flex flex-col items-center">
           <motion.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[1.05] text-ugle-slate max-w-4xl"
+            className="text-[2.6rem] md:text-7xl lg:text-[5.8rem] font-bold tracking-tight leading-[1.2] text-ugle-slate max-w-7xl"
           >
-            Find Your Moment. From Your Videos. <br />
-            <span className="text-ugle-green inline-block mt-2">
-              On your machine.
+            <span className="inline-block">
+              Find Your{" "}
+              <span className="whitespace-nowrap">
+                M
+                <Image
+                  src="/ugle-icon.png"
+                  alt="ugle moment o"
+                  width={50}
+                  height={50}
+                  className="inline-block align-baseline h-[0.68em] w-auto"
+                  priority
+                />
+                ment.
+              </span>
+            </span>
+            <br />
+            <span className="text-[2.6rem] lg:text-[4rem]">
+              From Your Videos. On Your Machine.
             </span>
           </motion.h1>
           <motion.p

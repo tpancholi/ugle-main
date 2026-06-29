@@ -215,7 +215,7 @@ const USE_CASE_DATA: Record<
         />
       </>
     ),
-    ctatitle: "Build better compilation episodes.",
+    ctatitle: "Publish episodes faster.",
     ctasubtitle: "Find the exact clip across hundreds of episodes instantly.",
     ctaText: "Get Ugle for Podcasts",
   },
