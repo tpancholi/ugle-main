@@ -59,7 +59,7 @@ export default function Hero() {
         <div className="space-y-6 flex flex-col items-center">
           <motion.h1
             variants={itemVariants}
-            className="text-[2.6rem] md:text-7xl lg:text-[5.8rem] font-bold tracking-tight leading-[1.2] text-ugle-slate max-w-7xl"
+            className="text-3xl sm:text-[2.6rem] md:text-7xl lg:text-[5.8rem] font-bold tracking-tight leading-[1.2] text-ugle-slate max-w-7xl"
           >
             <span className="inline-block">
               Find Your{" "}
@@ -77,7 +77,7 @@ export default function Hero() {
               </span>
             </span>
             <br />
-            <span className="text-[2.6rem] lg:text-[4rem]">
+            <span className="text-3xl sm:text-[2.6rem] lg:text-[4rem]">
               From Your Videos. On Your Machine.
             </span>
           </motion.h1>
