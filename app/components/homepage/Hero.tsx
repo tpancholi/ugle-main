@@ -77,13 +77,13 @@ export default function Hero() {
               </span>
             </span>
             <br />
-            <span className="text-[2.1rem] sm:text-[2.6rem] lg:text-[4rem]">
+            <span className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]">
               From Your Videos. On Your Machine.
             </span>
           </motion.h1>
           <motion.p
             variants={itemVariants}
-            className="text-lg sm:text-xl md:text-2xl text-ugle-gray leading-relaxed max-w-2xl font-medium"
+            className="text-base sm:text-xl md:text-2xl text-ugle-gray leading-relaxed max-w-2xl font-medium"
           >
             Ugle indexes every word spoken in your archive. Search by meaning in
             30ms. Nothing leaves your device.
@@ -96,13 +96,13 @@ export default function Hero() {
         >
           <Link
             href="/download"
-            className="bg-ugle-green hover:bg-[#86d950] transition-colors text-white font-bold py-3 px-5 md:py-4 md:px-10 rounded-xl shadow-lg hover:shadow-xl text-base md:text-lg text-center flex items-center justify-center gap-3 w-full sm:w-auto"
+            className="bg-ugle-green hover:bg-[#86d950] transition-colors text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl text-base md:text-lg text-center flex items-center justify-center gap-3 w-full sm:w-auto"
           >
             Get Early Access
           </Link>
           <Link
             href="/how-it-works"
-            className="bg-white hover:bg-gray-50 border-2 border-ugle-light/60 transition-colors text-ugle-slate font-bold py-3 px-5 md:py-4 md:px-10 rounded-xl text-base md:text-lg text-center flex items-center justify-center gap-2 w-full sm:w-auto hover:border-black/10"
+            className="bg-white hover:bg-gray-50 border-2 border-ugle-light/60 transition-colors text-ugle-slate font-bold py-4 px-10 rounded-xl text-base md:text-lg text-center flex items-center justify-center gap-2 w-full sm:w-auto hover:border-black/10"
           >
             See how it works &rarr;
           </Link>

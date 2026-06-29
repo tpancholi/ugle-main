@@ -13,18 +13,39 @@ const manrope = Manrope({
 
 const sfMono = localFont({
   src: [
-    { path: "./fonts/sf-mono/sf-mono-light.woff2", weight: "300", style: "normal" },
-    { path: "./fonts/sf-mono/sf-mono-regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/sf-mono/sf-mono-medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/sf-mono/sf-mono-semibold.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/sf-mono/sf-mono-bold.woff2", weight: "700", style: "normal" },
+    {
+      path: "./fonts/sf-mono/sf-mono-light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/sf-mono/sf-mono-regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/sf-mono/sf-mono-medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/sf-mono/sf-mono-semibold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/sf-mono/sf-mono-bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
   ],
   variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "Ugle",
-  description: "Local-First Search for Media Professionals",
+  title: "Ugle | Local-First Media Search",
+  description:
+    "Find the exact moment inside any recording, locally on your machine, with no uploads and no cloud.",
 };
 
 export default function RootLayout({
