@@ -20,7 +20,7 @@ export default function DownloadPage() {
             Free. No account. No upload.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-24">
+          <div className="flex flex-col sm:flex-row gap-4 mb-18">
             <DownloadButton
               platform="macos"
               variant="filled"

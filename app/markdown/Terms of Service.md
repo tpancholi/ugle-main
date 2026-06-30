@@ -1,6 +1,6 @@
 # **Terms of Service**
 
- **Last Updated:** June 2026  
+ **Last Updated:** 27 June 2026  
  **Company:** Deepshield AI Technology LLP  
  **Registered Office:** 40, Oriyant Colony, Bhuj, Kachchh, Gujarat 370001, India  
  **Contact:** legal@ugle.ai  
