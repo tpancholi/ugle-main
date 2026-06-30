@@ -77,9 +77,11 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
                   {price}
                 </div>
               </div>
-              <div className="text-[12px] text-ugle-gray/55 mt-0.5">
-                {loyaltyNote}
-              </div>
+              {isAnnual && (
+                <div className="text-[12px] text-ugle-gray/55 mt-0.5">
+                  loyalty renewal rate · save ~15%
+                </div>
+              )}
             </div>
             <Link
               href="/get-early-access"
@@ -92,22 +94,21 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
       </div>
 
       {/* Loyalty note — below the card */}
-      <div className="mt-4 flex items-start gap-3 bg-[#F0F9EA] border border-[#75C043]/30 rounded-xl px-5 py-4">
-        <span className="text-[#5DA233] text-lg mt-0.5">&#10022;</span>
-        <div>
-          <p className="text-sm font-semibold text-ugle-slate">
-            15% Loyalty Discount on every renewal
-          </p>
-          <p className="text-[13px] text-ugle-gray mt-0.5">
-            Prices shown reflect the loyalty rate for returning subscribers.
-            First-time price:{" "}
-            <span className="font-semibold">
-              {isAnnual ? "$199/year" : "$25/month"}
-            </span>
-            .
-          </p>
+      {isAnnual && (
+        <div className="mt-4 flex items-start gap-3 bg-[#F0F9EA] border border-[#75C043]/30 rounded-xl px-5 py-4">
+          <span className="text-[#5DA233] text-lg mt-0.5">&#10022;</span>
+          <div>
+            <p className="text-sm font-semibold text-ugle-slate">
+              15% Loyalty Discount on every renewal
+            </p>
+            <p className="text-[13px] text-ugle-gray mt-0.5">
+              Prices shown reflect the loyalty rate for returning subscribers.
+              First-time price: <span className="font-semibold">$199/year</span>
+              .
+            </p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -191,67 +192,67 @@ function OrganisationPanel() {
 }
 
 // ── Non-commercial panel ──────────────────────────────────────────────────────
-function NonCommercialPanel() {
-  return (
-    <div className="max-w-2xl mx-auto mb-32">
-      <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
-        <div className="bg-ugle-slate px-8 py-7">
-          <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
-            Non-commercial licence
-          </div>
-          <h2 className="text-[26px] font-extrabold text-white tracking-tight leading-tight">
-            Using Ugle for personal, non-earning work?
-          </h2>
-        </div>
+// function NonCommercialPanel() {
+//   return (
+//     <div className="max-w-2xl mx-auto mb-32">
+//       <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
+//         <div className="bg-ugle-slate px-8 py-7">
+//           <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
+//             Non-commercial licence
+//           </div>
+//           <h2 className="text-[26px] font-extrabold text-white tracking-tight leading-tight">
+//             Using Ugle for personal, non-earning work?
+//           </h2>
+//         </div>
 
-        <div className="px-8 py-7 space-y-5">
-          <p className="text-[15px] text-ugle-gray leading-relaxed">
-            Individuals using eligible Ugle products without earning commercial
-            benefits can use Ugle for free. No approval required.
-          </p>
+//         <div className="px-8 py-7 space-y-5">
+//           <p className="text-[15px] text-ugle-gray leading-relaxed">
+//             Individuals using eligible Ugle products without earning commercial
+//             benefits can use Ugle for free. No approval required.
+//           </p>
 
-          <div className="space-y-3">
-            {[
-              "Personal documentary or archival projects",
-              "Academic research (non-institutional)",
-              "Community journalism \u2014 no paid distribution",
-              "Creative hobbyists with no commercial output",
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 text-[14px] font-medium text-ugle-slate"
-              >
-                <Check
-                  className="size-3.5 shrink-0 mt-0.5 text-[#5DA233]"
-                  strokeWidth={2.5}
-                />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
+//           <div className="space-y-3">
+//             {[
+//               "Personal documentary or archival projects",
+//               "Academic research (non-institutional)",
+//               "Community journalism \u2014 no paid distribution",
+//               "Creative hobbyists with no commercial output",
+//             ].map((item, i) => (
+//               <div
+//                 key={i}
+//                 className="flex items-start gap-3 text-[14px] font-medium text-ugle-slate"
+//               >
+//                 <Check
+//                   className="size-3.5 shrink-0 mt-0.5 text-[#5DA233]"
+//                   strokeWidth={2.5}
+//                 />
+//                 <span>{item}</span>
+//               </div>
+//             ))}
+//           </div>
 
-          <div className="border-t border-ugle-light/60 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <div className="text-[13px] text-ugle-gray mb-0.5">Price</div>
-              <div className="text-[32px] font-extrabold text-ugle-slate tracking-tight leading-none">
-                Free
-              </div>
-              <div className="text-[12px] text-ugle-gray/55 mt-0.5">
-                no approval required
-              </div>
-            </div>
-            <Link
-              href="/non-commercial"
-              className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
-            >
-              Get free access
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+//           <div className="border-t border-ugle-light/60 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+//             <div>
+//               <div className="text-[13px] text-ugle-gray mb-0.5">Price</div>
+//               <div className="text-[32px] font-extrabold text-ugle-slate tracking-tight leading-none">
+//                 Free
+//               </div>
+//               <div className="text-[12px] text-ugle-gray/55 mt-0.5">
+//                 no approval required
+//               </div>
+//             </div>
+//             <Link
+//               href="/non-commercial"
+//               className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors"
+//             >
+//               Get free access
+//             </Link>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 // ── Education panel ───────────────────────────────────────────────────────────
 function EducationPanel() {
@@ -337,7 +338,7 @@ export default function PricingMain() {
   const categories = [
     { id: "organisation", label: "Organisation" },
     { id: "individuals", label: "Individuals" },
-    { id: "non-commercial", label: "Non-commercial" },
+    // { id: "non-commercial", label: "Non-commercial" },
     { id: "education", label: "Education" },
   ] as const;
 
@@ -364,11 +365,11 @@ export default function PricingMain() {
               }`}
             >
               {cat.label}
-              {(cat.id === "non-commercial" || cat.id === "education") && (
+              {/* {(cat.id === "non-commercial" || cat.id === "education") && (
                 <span className="ml-1.5 text-[11px] font-bold text-[#5DA233]">
                   Free
                 </span>
-              )}
+              )} */}
             </button>
           ))}
         </div>
@@ -387,11 +388,11 @@ export default function PricingMain() {
               }`}
             >
               {cat.label}
-              {(cat.id === "non-commercial" || cat.id === "education") && (
+              {/* {(cat.id === "non-commercial" || cat.id === "education") && (
                 <span className="ml-1.5 text-[11px] font-bold text-[#5DA233]">
                   Free
                 </span>
-              )}
+              )} */}
             </button>
           ))}
         </div>
@@ -442,9 +443,7 @@ export default function PricingMain() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
       >
-        {category === "non-commercial" ? (
-          <NonCommercialPanel />
-        ) : category === "education" ? (
+        {category === "education" ? (
           <EducationPanel />
         ) : category === "organisation" ? (
           <OrganisationPanel />
