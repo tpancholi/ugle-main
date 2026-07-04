@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
+import { requestEarlyAccess, type ActionState } from "@/app/actions/early-access";
+
+const initialState: ActionState = { success: false, message: "" };
+
+const inputClass =
+  "w-full bg-[#F8FAF9] border border-ugle-light/60 rounded-[10px] px-4 py-3 text-[15px] text-ugle-slate focus:outline-none focus:border-[#75C043] focus:ring-1 focus:ring-[#75C043] transition-all";
 
 export default function GetAccessForm() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [state, formAction, isPending] = useActionState(
+    requestEarlyAccess,
+    initialState,
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -13,14 +23,8 @@ export default function GetAccessForm() {
       transition={{ delay: 0.1, duration: 0.5 }}
       className="bg-white rounded-2xl p-8 md:p-12 border border-ugle-light/60 shadow-sm"
     >
-      {!isSubmitted ? (
-        <form
-          className="space-y-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setIsSubmitted(true);
-          }}
-        >
+      {!state.success ? (
+        <form action={formAction} className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="block text-[15px] font-bold text-ugle-slate">
@@ -28,8 +32,9 @@ export default function GetAccessForm() {
               </label>
               <input
                 type="text"
+                name="firstName"
                 required
-                className="w-full bg-[#F8FAF9] border border-ugle-light/60 rounded-[10px] px-4 py-3 text-[15px] text-ugle-slate focus:outline-none focus:border-[#75C043] focus:ring-1 focus:ring-[#75C043] transition-all"
+                className={inputClass}
               />
             </div>
             <div className="space-y-2">
@@ -38,8 +43,9 @@ export default function GetAccessForm() {
               </label>
               <input
                 type="text"
+                name="lastName"
                 required
-                className="w-full bg-[#F8FAF9] border border-ugle-light/60 rounded-[10px] px-4 py-3 text-[15px] text-ugle-slate focus:outline-none focus:border-[#75C043] focus:ring-1 focus:ring-[#75C043] transition-all"
+                className={inputClass}
               />
             </div>
           </div>
@@ -50,8 +56,9 @@ export default function GetAccessForm() {
             </label>
             <input
               type="email"
+              name="email"
               required
-              className="w-full bg-[#F8FAF9] border border-ugle-light/60 rounded-[10px] px-4 py-3 text-[15px] text-ugle-slate focus:outline-none focus:border-[#75C043] focus:ring-1 focus:ring-[#75C043] transition-all"
+              className={inputClass}
             />
           </div>
 
@@ -61,8 +68,9 @@ export default function GetAccessForm() {
             </label>
             <input
               type="tel"
+              name="phone"
               required
-              className="w-full bg-[#F8FAF9] border border-ugle-light/60 rounded-[10px] px-4 py-3 text-[15px] text-ugle-slate focus:outline-none focus:border-[#75C043] focus:ring-1 focus:ring-[#75C043] transition-all"
+              className={inputClass}
             />
           </div>
 
@@ -75,6 +83,7 @@ export default function GetAccessForm() {
                 <input
                   type="radio"
                   name="os"
+                  value="macOS"
                   required
                   className="text-[#75C043] focus:ring-[#75C043]"
                 />
@@ -86,7 +95,7 @@ export default function GetAccessForm() {
                 <input
                   type="radio"
                   name="os"
-                  required
+                  value="Windows"
                   className="text-[#75C043] focus:ring-[#75C043]"
                 />
                 <span className="text-[15px] font-medium text-ugle-slate">
@@ -96,11 +105,17 @@ export default function GetAccessForm() {
             </div>
           </div>
 
+          {/* Validation error */}
+          {state.error && (
+            <p className="text-red-500 text-sm font-medium">{state.error}</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-ugle-slate text-white font-bold py-4 px-6 rounded-[10px] transition-colors hover:bg-[#222] text-[15px] mt-4"
+            disabled={isPending}
+            className="w-full bg-ugle-slate text-white font-bold py-4 px-6 rounded-[10px] transition-colors hover:bg-[#222] text-[15px] mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Request Access
+            {isPending ? "Submitting…" : "Request Access"}
           </button>
         </form>
       ) : (
