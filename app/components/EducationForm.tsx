@@ -1,16 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { FormInput, FormSelect } from "./ContactForm";
+import {
+  applyForEducationAccess,
+  type ActionState,
+} from "@/app/actions/education";
+
+const initialState: ActionState = { success: false, message: "" };
 
 export default function EducationForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [state, formAction, isPending] = useActionState(
+    applyForEducationAccess,
+    initialState,
+  );
+
   return (
     <div>
-      {submitted ? (
+      {state.success ? (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -35,11 +45,8 @@ export default function EducationForm() {
         <motion.form
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          action={formAction}
           className="bg-white border border-ugle-light/60 rounded-2xl p-8 md:p-10 max-w-xl mx-auto shadow-sm"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmitted(true);
-          }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput id="firstName" label="First Name" />
@@ -65,11 +72,20 @@ export default function EducationForm() {
             required={false}
           />
 
+          {/* Validation error */}
+          {state.error && (
+            <p className="text-red-500 text-sm font-medium mt-1">
+              {state.error}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="w-full mt-4 border border-ugle-slate text-ugle-slate font-bold py-4 px-6 rounded-xl hover:bg-ugle-light/20 transition-colors text-lg flex justify-center items-center gap-2"
+            disabled={isPending}
+            className="w-full mt-4 border border-ugle-slate text-ugle-slate font-bold py-4 px-6 rounded-xl hover:bg-ugle-light/20 transition-colors text-lg flex justify-center items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Submit Application <ArrowRight className="w-5 h-5" />
+            {isPending ? "Submitting…" : "Submit Application"}
+            {!isPending && <ArrowRight className="w-5 h-5" />}
           </button>
         </motion.form>
       )}

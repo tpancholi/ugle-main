@@ -11,12 +11,14 @@ export const FormInput = ({
   placeholder,
   required = true,
   id,
+  name,
 }: {
   label: string;
   type?: string;
   placeholder?: string;
   required?: boolean;
   id: string;
+  name?: string;
 }) => (
   <div className="mb-4 text-left">
     <label
@@ -28,6 +30,7 @@ export const FormInput = ({
     <input
       type={type}
       id={id}
+      name={name ?? id}
       required={required}
       placeholder={placeholder}
       className="w-full px-4 py-3 bg-white border border-ugle-light/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#75C043]/50 focus:border-[#75C043] transition-all text-ugle-slate placeholder:text-ugle-gray/50"
@@ -70,11 +73,13 @@ export const FormSelect = ({
   options,
   required = true,
   id,
+  name,
 }: {
   label: string;
   options: string[];
   required?: boolean;
   id: string;
+  name?: string;
 }) => (
   <div className="mb-4 text-left">
     <label
@@ -85,6 +90,7 @@ export const FormSelect = ({
     </label>
     <select
       id={id}
+      name={name ?? id}
       required={required}
       className="w-full px-4 py-3 bg-white border border-ugle-light/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#75C043]/50 focus:border-[#75C043] transition-all text-ugle-slate"
     >
