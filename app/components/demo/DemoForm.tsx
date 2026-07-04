@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
+import { requestDemo, type ActionState } from "@/app/actions/demo";
+
+const initialState: ActionState = { success: false, message: "" };
 
 export default function DemoForm() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [state, formAction, isPending] = useActionState(
+    requestDemo,
+    initialState,
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -13,14 +20,8 @@ export default function DemoForm() {
       transition={{ duration: 0.5, delay: 0.1 }}
       className="bg-[#2A2A2A] rounded-2xl p-8 md:p-10 border border-white/10 shadow-2xl relative"
     >
-      {!isSubmitted ? (
-        <form
-          className="space-y-5 text-white"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setIsSubmitted(true);
-          }}
-        >
+      {!state.success ? (
+        <form action={formAction} className="space-y-5 text-white">
           <div className="grid md:grid-cols-2 gap-5">
             <div className="space-y-2">
               <label className="block text-[14px] font-semibold text-white/80">
@@ -28,6 +29,7 @@ export default function DemoForm() {
               </label>
               <input
                 type="text"
+                name="firstName"
                 required
                 className="w-full bg-[#1C1C1C] border border-white/10 rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:border-[#75C043] transition-all"
               />
@@ -38,6 +40,7 @@ export default function DemoForm() {
               </label>
               <input
                 type="text"
+                name="lastName"
                 required
                 className="w-full bg-[#1C1C1C] border border-white/10 rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:border-[#75C043] transition-all"
               />
@@ -50,6 +53,7 @@ export default function DemoForm() {
             </label>
             <input
               type="email"
+              name="email"
               required
               className="w-full bg-[#1C1C1C] border border-white/10 rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:border-[#75C043] transition-all"
             />
@@ -61,6 +65,7 @@ export default function DemoForm() {
             </label>
             <input
               type="text"
+              name="company"
               required
               className="w-full bg-[#1C1C1C] border border-white/10 rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:border-[#75C043] transition-all"
             />
@@ -71,6 +76,7 @@ export default function DemoForm() {
               Team size
             </label>
             <select
+              name="teamSize"
               required
               className="w-full bg-[#1C1C1C] border border-white/10 rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:border-[#75C043] transition-all appearance-none text-white"
             >
@@ -87,17 +93,24 @@ export default function DemoForm() {
               How are you currently handling archive search?
             </label>
             <textarea
+              name="currentSearch"
               rows={3}
               required
               className="w-full bg-[#1C1C1C] border border-white/10 rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:border-[#75C043] transition-all resize-none"
             ></textarea>
           </div>
 
+          {/* Validation error */}
+          {state.error && (
+            <p className="text-red-400 text-sm font-medium">{state.error}</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-[#75C043] text-[#102206] font-bold py-4 px-6 rounded-lg transition-colors hover:bg-[#5DA233] hover:text-white text-[15px] mt-4"
+            disabled={isPending}
+            className="w-full bg-[#75C043] text-[#102206] font-bold py-4 px-6 rounded-lg transition-colors hover:bg-[#5DA233] hover:text-white text-[15px] mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Request Demo
+            {isPending ? "Sending…" : "Request Demo"}
           </button>
         </form>
       ) : (
