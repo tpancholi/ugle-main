@@ -1,9 +1,13 @@
 "use client";
 
+import { useActionState } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { useState } from "react";
+import {
+  submitContactInquiry,
+  type ActionState,
+} from "@/app/actions/contact";
 
 export const FormInput = ({
   label,
@@ -43,12 +47,14 @@ export const FormTextarea = ({
   placeholder,
   required = true,
   id,
+  name,
   rows = 4,
 }: {
   label: string;
   placeholder?: string;
   required?: boolean;
   id: string;
+  name?: string;
   rows?: number;
 }) => (
   <div className="mb-4 text-left">
@@ -60,6 +66,7 @@ export const FormTextarea = ({
     </label>
     <textarea
       id={id}
+      name={name ?? id}
       required={required}
       placeholder={placeholder}
       rows={rows}
@@ -104,11 +111,17 @@ export const FormSelect = ({
   </div>
 );
 
+const initialState: ActionState = { success: false, message: "" };
+
 export default function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [state, formAction, isPending] = useActionState(
+    submitContactInquiry,
+    initialState,
+  );
+
   return (
     <>
-      {submitted ? (
+      {state.success ? (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -133,11 +146,8 @@ export default function ContactForm() {
         <motion.form
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          action={formAction}
           className="bg-white border border-ugle-light/60 rounded-2xl p-8 md:p-10 max-w-xl mx-auto shadow-sm"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmitted(true);
-          }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput id="firstName" label="First Name" />
@@ -160,11 +170,21 @@ export default function ContactForm() {
             label="How does your team plan to use Ugle?"
             rows={3}
           />
+
+          {/* Validation error */}
+          {state.error && (
+            <p className="text-red-500 text-sm font-medium mt-1">
+              {state.error}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="w-full mt-4 bg-[#75C043] text-[#102206] font-bold py-4 px-6 rounded-xl hover:bg-[#5DA233] hover:text-white transition-colors text-lg flex justify-center items-center gap-2"
+            disabled={isPending}
+            className="w-full mt-4 bg-[#75C043] text-[#102206] font-bold py-4 px-6 rounded-xl hover:bg-[#5DA233] hover:text-white transition-colors text-lg flex justify-center items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Submit Inquiry <ArrowRight className="w-5 h-5" />
+            {isPending ? "Submitting\u2026" : "Submit Inquiry"}
+            {!isPending && <ArrowRight className="w-5 h-5" />}
           </button>
         </motion.form>
       )}
