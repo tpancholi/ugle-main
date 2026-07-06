@@ -51,29 +51,28 @@ export async function requestDemo(
   // whether the other one fails.
   const [emailResult, sheetsResult] = await Promise.allSettled([
     // Operation 1: Send confirmation + admin notification emails via Resend
-    // resend.batch.send([
-    //   {
-    //     from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-    //     to: [email],
-    //     subject: `${firstName}, your Ugle demo request is confirmed 🎬`,
-    //     react: DemoConfirmationEmail({ firstName, email }),
-    //   },
-    //   {
-    //     from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-    //     to: [env.ADMIN_EMAIL],
-    //     subject: `New demo request: ${firstName} ${lastName} — ${company}`,
-    //     react: DemoAdminNotificationEmail({
-    //       firstName,
-    //       lastName,
-    //       email,
-    //       company,
-    //       teamSize,
-    //       currentSearch,
-    //       submittedAt,
-    //     }),
-    //   },
-    // ]),
-    resend.emails.list(),
+    resend.batch.send([
+      {
+        from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
+        to: [email],
+        subject: `${firstName}, your Ugle demo request is confirmed 🎬`,
+        react: DemoConfirmationEmail({ firstName, email }),
+      },
+      {
+        from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
+        to: [env.ADMIN_EMAIL],
+        subject: `New demo request: ${firstName} ${lastName} — ${company}`,
+        react: DemoAdminNotificationEmail({
+          firstName,
+          lastName,
+          email,
+          company,
+          teamSize,
+          currentSearch,
+          submittedAt,
+        }),
+      },
+    ]),
 
     // Operation 2: Append lead row to Google Sheets
     new DemoSheetService().append({

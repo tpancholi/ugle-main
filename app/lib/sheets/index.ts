@@ -5,3 +5,5 @@ export { EarlyAccessSheetService } from "./EarlyAccessSheetService";
 export type { EarlyAccessRow } from "./EarlyAccessSheetService";
 export { DemoSheetService } from "./DemoSheetService";
 export type { DemoRow } from "./DemoSheetService";
+export { ContactFormSheetService } from "./ContactFormSheetService";
+export type { ContactFormRow } from "./ContactFormSheetService";

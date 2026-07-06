@@ -6,6 +6,7 @@ import {
   ContactConfirmationEmail,
   ContactAdminNotificationEmail,
 } from "../components/email-templates/ContactTemplates";
+import { ContactFormSheetService } from "@/app/lib/sheets";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -28,14 +29,7 @@ export async function submitContactInquiry(
   initialState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const raw = {
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    company: formData.get("company"),
-    seats: formData.get("seats"),
-    usecase: formData.get("usecase"),
-  };
+  const raw = Object.fromEntries(formData);
 
   const result = contactSchema.safeParse(raw);
 
@@ -45,10 +39,14 @@ export async function submitContactInquiry(
   }
 
   const { firstName, lastName, email, company, seats, usecase } = result.data;
-  const submittedAt = new Date().toUTCString();
+  const submittedAt = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date());
 
-  try {
-    const { error } = await resend.batch.send([
+  const [emailResult, sheetsResult] = await Promise.allSettled([
+    resend.batch.send([
       // Confirmation email → submitter
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
@@ -71,24 +69,42 @@ export async function submitContactInquiry(
           submittedAt,
         }),
       },
-    ]);
+    ]),
 
-    if (error) {
-      console.error("Resend batch error:", error);
-      return {
-        success: false,
-        message: "Something went wrong. Please try again.",
-        error: error.message,
-      };
-    }
+    new ContactFormSheetService().append({
+      firstName,
+      lastName,
+      email,
+      company,
+      seats,
+      usecase,
+      submittedAt,
+    }),
+  ]);
 
-    return { success: true, message: "Inquiry submitted" };
-  } catch (err) {
-    console.error("Contact form error:", err);
+  // Log individual failures server-side for visibility
+  if (emailResult.status === "rejected") {
+    console.error("[Demo] Resend failed:", emailResult.reason);
+  } else if (emailResult.value.error) {
+    console.error("[Demo] Resend batch error:", emailResult.value.error);
+  }
+
+  if (sheetsResult.status === "rejected") {
+    console.error("[Demo] Google Sheets failed:", sheetsResult.reason);
+  }
+
+  // Option A: succeed if at least one method captured the lead
+  const emailOk =
+    emailResult.status === "fulfilled" && !emailResult.value.error;
+  const sheetsOk = sheetsResult.status === "fulfilled";
+
+  if (!emailOk && !sheetsOk) {
     return {
       success: false,
       message: "Something went wrong. Please try again.",
-      error: "Submission failed",
+      error: "All submission methods failed",
     };
   }
+
+  return { success: true, message: "Request submitted" };
 }
