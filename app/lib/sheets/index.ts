@@ -7,3 +7,6 @@ export { DemoSheetService } from "./DemoSheetService";
 export type { DemoRow } from "./DemoSheetService";
 export { ContactFormSheetService } from "./ContactFormSheetService";
 export type { ContactFormRow } from "./ContactFormSheetService";
+export { EducationSheetService } from "./EducationSheetService";
+export type { EducationRow } from "./EducationSheetService";
+

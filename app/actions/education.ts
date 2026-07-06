@@ -6,6 +6,7 @@ import {
   EducationConfirmationEmail,
   EducationAdminNotificationEmail,
 } from "../components/email-templates/EducationTemplates";
+import { EducationSheetService } from "@/app/lib/sheets";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -29,14 +30,7 @@ export async function applyForEducationAccess(
   initialState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const raw = {
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    institution: formData.get("institution"),
-    role: formData.get("role"),
-    proofUrl: formData.get("proofUrl") || undefined,
-  };
+  const raw = Object.fromEntries(formData);
 
   const result = educationSchema.safeParse(raw);
 
@@ -47,18 +41,23 @@ export async function applyForEducationAccess(
 
   const { firstName, lastName, email, institution, role, proofUrl } =
     result.data;
-  const submittedAt = new Date().toUTCString();
+  const submittedAt = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date());
 
-  try {
-    const { error } = await resend.batch.send([
-      // Confirmation email → applicant
+  // Run both operations concurrently and independently.
+  // Promise.allSettled guarantees both are always attempted regardless of whether the other fails.
+  const [emailResult, sheetsResult] = await Promise.allSettled([
+    // Operation 1: Send confirmation + admin notification emails via Resend
+    resend.batch.send([
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
         to: [email],
         subject: `${firstName}, we've received your Ugle education application 🎓`,
         react: EducationConfirmationEmail({ firstName, email }),
       },
-      // Notification email → admin
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
         to: [env.ADMIN_EMAIL],
@@ -73,24 +72,43 @@ export async function applyForEducationAccess(
           submittedAt,
         }),
       },
-    ]);
+    ]),
 
-    if (error) {
-      console.error("Resend batch error:", error);
-      return {
-        success: false,
-        message: "Something went wrong. Please try again.",
-        error: error.message,
-      };
-    }
+    // Operation 2: Append application details to Google Sheets
+    new EducationSheetService().append({
+      firstName,
+      lastName,
+      email,
+      institution,
+      role,
+      proofUrl,
+      submittedAt,
+    }),
+  ]);
 
-    return { success: true, message: "Application submitted" };
-  } catch (err) {
-    console.error("Education application error:", err);
+  // Log individual failures server-side for visibility
+  if (emailResult.status === "rejected") {
+    console.error("[Education] Resend failed:", emailResult.reason);
+  } else if (emailResult.value.error) {
+    console.error("[Education] Resend batch error:", emailResult.value.error);
+  }
+
+  if (sheetsResult.status === "rejected") {
+    console.error("[Education] Google Sheets failed:", sheetsResult.reason);
+  }
+
+  // Option A: succeed if at least one method captured the lead
+  const emailOk =
+    emailResult.status === "fulfilled" && !emailResult.value.error;
+  const sheetsOk = sheetsResult.status === "fulfilled";
+
+  if (!emailOk && !sheetsOk) {
     return {
       success: false,
       message: "Something went wrong. Please try again.",
-      error: "Submission failed",
+      error: "All submission methods failed",
     };
   }
+
+  return { success: true, message: "Application submitted" };
 }
