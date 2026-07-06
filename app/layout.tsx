@@ -53,11 +53,13 @@ export const metadata: Metadata = {
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
     shortcut: "/favicon.ico",
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/site.webmanifest",
+  other: {
+    rel: "preconnect",
+    url: "https://challenges.cloudflare.com",
+  },
 };
 
 export default function RootLayout({

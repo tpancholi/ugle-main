@@ -7,6 +7,7 @@ import {
   NewsletterWelcomeEmail,
 } from "../components/email-templates/NewsletterTemplates";
 import { NewsletterSheetService } from "@/app/lib/sheets";
+import { verifyTurnstile } from "@/app/lib/turnstile";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -25,6 +26,16 @@ export async function newsletterJoin(
   formData: FormData,
 ): Promise<ActionState> {
   const email = formData.get("email");
+  const turnstileToken = formData.get("cf-turnstile-response") as string | null;
+  const isHuman = await verifyTurnstile(turnstileToken);
+
+  if (!isHuman) {
+    return {
+      success: false,
+      message: "Verification failed. Please try again.",
+      error: "Verification failed. Please try again.",
+    };
+  }
 
   const result = newsletterSchema.safeParse({ email });
 
@@ -44,11 +55,7 @@ export async function newsletterJoin(
     timeStyle: "short",
   }).format(new Date());
 
-  // Run both operations concurrently and independently.
-  // Promise.allSettled guarantees both are always attempted regardless of
-  // whether the other one fails.
   const [emailResult, sheetsResult] = await Promise.allSettled([
-    // Operation 1: Send welcome + admin notification emails via Resend
     resend.batch.send([
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
@@ -67,14 +74,12 @@ export async function newsletterJoin(
       },
     ]),
 
-    // Operation 2: Append subscriber row to Google Sheets
     new NewsletterSheetService().append({
       email: subscriberEmail,
       subscribedAt,
     }),
   ]);
 
-  // Log individual failures server-side for visibility
   if (emailResult.status === "rejected") {
     console.error("[Newsletter] Resend failed:", emailResult.reason);
   } else if (emailResult.value.error) {
@@ -85,7 +90,6 @@ export async function newsletterJoin(
     console.error("[Newsletter] Google Sheets failed:", sheetsResult.reason);
   }
 
-  // Option A: succeed if at least one method captured the lead
   const emailOk =
     emailResult.status === "fulfilled" && !emailResult.value.error;
   const sheetsOk = sheetsResult.status === "fulfilled";

@@ -1,7 +1,8 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, Loader2 } from "lucide-react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { newsletterJoin, type ActionState } from "@/app/actions/newsletter";
 
 const initialState: ActionState = {
@@ -14,8 +15,16 @@ export default function FooterNewsletter() {
     newsletterJoin,
     initialState,
   );
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const error = state?.error;
+
+  // Reset the widget after a failed submission so the token isn't reused
+  useEffect(() => {
+    if (!pending && state.error) {
+      turnstileRef.current?.reset();
+    }
+  }, [pending, state]);
 
   return (
     <AnimatePresence mode="wait">
@@ -68,6 +77,20 @@ export default function FooterNewsletter() {
               )}
             </button>
           </div>
+
+          {/* Invisible/managed Turnstile widget — no name attr needed,
+              the library injects a hidden input called cf-turnstile-response */}
+          <div className="mt-2">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              options={{
+                size: "invisible",
+                appearance: "interaction-only",
+              }}
+            />
+          </div>
+
           <AnimatePresence>
             {error && (
               <motion.span
@@ -85,4 +108,3 @@ export default function FooterNewsletter() {
     </AnimatePresence>
   );
 }
-

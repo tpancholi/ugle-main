@@ -18,11 +18,18 @@ const envSchema = z.object({
       return val.replace(/\\n/g, "\n");
     }),
   GOOGLE_SPREADSHEET_ID: z.string().min(5),
+
+  //Turnstile
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string(),
+  TURNSTILE_SECRET_KEY: z.string(),
 });
 
 // Validate `process.env` against our schema
 // and return the result
-const env = envSchema.parse(process.env);
+const env = envSchema.parse({
+  ...process.env,
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+});
 
 // Export the result so we can use it in the project
 export default env;
