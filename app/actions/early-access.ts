@@ -60,7 +60,7 @@ export async function requestEarlyAccess(
       },
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-        to: [env.ADMIN_EMAIL],
+        to: env.ADMIN_EMAIL,
         subject: `New early access request: ${firstName} ${lastName} (${os})`,
         react: EarlyAccessAdminNotificationEmail({
           firstName,

@@ -60,7 +60,7 @@ export async function requestDemo(
       },
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-        to: [env.ADMIN_EMAIL],
+        to: env.ADMIN_EMAIL,
         subject: `New demo request: ${firstName} ${lastName} — ${company}`,
         react: DemoAdminNotificationEmail({
           firstName,

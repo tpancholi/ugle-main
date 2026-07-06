@@ -6,8 +6,16 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().min(3),
   // Verified sender address configured in your Resend domain settings
   RESEND_FROM_EMAIL: z.email(),
-  // Admin inbox that receives new-subscriber notifications
-  ADMIN_EMAIL: z.email(),
+  // Admin inboxes that receive new-subscriber notifications
+  ADMIN_EMAIL: z
+    .string()
+    .min(3)
+    .transform((val) => {
+      const emails = val.split(",").map((email) => email.trim());
+      // Validate each email in the list
+      emails.forEach((email) => z.string().email().parse(email));
+      return emails;
+    }),
 
   // Google Variables
   GOOGLE_CLIENT_EMAIL: z.email(),

@@ -60,7 +60,7 @@ export async function applyForEducationAccess(
       },
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-        to: [env.ADMIN_EMAIL],
+        to: env.ADMIN_EMAIL,
         subject: `New education application: ${firstName} ${lastName} — ${institution}`,
         react: EducationAdminNotificationEmail({
           firstName,

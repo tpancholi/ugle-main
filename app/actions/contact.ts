@@ -57,7 +57,7 @@ export async function submitContactInquiry(
       // Notification email → admin
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-        to: [env.ADMIN_EMAIL],
+        to: env.ADMIN_EMAIL,
         subject: `New sales inquiry: ${firstName} ${lastName} — ${company} (${seats} seats)`,
         react: ContactAdminNotificationEmail({
           firstName,
