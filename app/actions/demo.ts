@@ -6,6 +6,7 @@ import {
   DemoConfirmationEmail,
   DemoAdminNotificationEmail,
 } from "../components/email-templates/DemoTemplates";
+import { DemoSheetService } from "@/app/lib/sheets";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -28,7 +29,6 @@ export async function requestDemo(
   initialState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-
   const raw = Object.fromEntries(formData);
 
   const result = demoSchema.safeParse(raw);
@@ -40,50 +40,76 @@ export async function requestDemo(
 
   const { firstName, lastName, email, company, teamSize, currentSearch } =
     result.data;
-  const submittedAt = new Date().toUTCString();
+  const submittedAt = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date());
 
-  try {
-    const { error } = await resend.batch.send([
-      // Confirmation email → requester
-      {
-        from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-        to: [email],
-        subject: `${firstName}, your Ugle demo request is confirmed 🎬`,
-        react: DemoConfirmationEmail({ firstName, email }),
-      },
-      // Notification email → admin
-      {
-        from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
-        to: [env.ADMIN_EMAIL],
-        subject: `New demo request: ${firstName} ${lastName} — ${company}`,
-        react: DemoAdminNotificationEmail({
-          firstName,
-          lastName,
-          email,
-          company,
-          teamSize,
-          currentSearch,
-          submittedAt,
-        }),
-      },
-    ]);
+  // Run both operations concurrently and independently.
+  // Promise.allSettled guarantees both are always attempted regardless of
+  // whether the other one fails.
+  const [emailResult, sheetsResult] = await Promise.allSettled([
+    // Operation 1: Send confirmation + admin notification emails via Resend
+    // resend.batch.send([
+    //   {
+    //     from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
+    //     to: [email],
+    //     subject: `${firstName}, your Ugle demo request is confirmed 🎬`,
+    //     react: DemoConfirmationEmail({ firstName, email }),
+    //   },
+    //   {
+    //     from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
+    //     to: [env.ADMIN_EMAIL],
+    //     subject: `New demo request: ${firstName} ${lastName} — ${company}`,
+    //     react: DemoAdminNotificationEmail({
+    //       firstName,
+    //       lastName,
+    //       email,
+    //       company,
+    //       teamSize,
+    //       currentSearch,
+    //       submittedAt,
+    //     }),
+    //   },
+    // ]),
+    resend.emails.list(),
 
-    if (error) {
-      console.error("Resend batch error:", error);
-      return {
-        success: false,
-        message: "Something went wrong. Please try again.",
-        error: error.message,
-      };
-    }
+    // Operation 2: Append lead row to Google Sheets
+    new DemoSheetService().append({
+      firstName,
+      lastName,
+      email,
+      company,
+      teamSize,
+      currentSearch,
+      submittedAt,
+    }),
+  ]);
 
-    return { success: true, message: "Request submitted" };
-  } catch (err) {
-    console.error("Demo request error:", err);
+  // Log individual failures server-side for visibility
+  if (emailResult.status === "rejected") {
+    console.error("[Demo] Resend failed:", emailResult.reason);
+  } else if (emailResult.value.error) {
+    console.error("[Demo] Resend batch error:", emailResult.value.error);
+  }
+
+  if (sheetsResult.status === "rejected") {
+    console.error("[Demo] Google Sheets failed:", sheetsResult.reason);
+  }
+
+  // Option A: succeed if at least one method captured the lead
+  const emailOk =
+    emailResult.status === "fulfilled" && !emailResult.value.error;
+  const sheetsOk = sheetsResult.status === "fulfilled";
+
+  if (!emailOk && !sheetsOk) {
     return {
       success: false,
       message: "Something went wrong. Please try again.",
-      error: "Submission failed",
+      error: "All submission methods failed",
     };
   }
+
+  return { success: true, message: "Request submitted" };
 }
