@@ -6,6 +6,7 @@ import {
   EarlyAccessConfirmationEmail,
   EarlyAccessAdminNotificationEmail,
 } from "../components/email-templates/EarlyAccessTemplates";
+import { EarlyAccessSheetService } from "@/app/lib/sheets";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -29,13 +30,7 @@ export async function requestEarlyAccess(
   initialState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const raw = {
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    os: formData.get("os"),
-  };
+  const raw = Object.fromEntries(formData);
 
   const result = earlyAccessSchema.safeParse(raw);
 
@@ -45,18 +40,24 @@ export async function requestEarlyAccess(
   }
 
   const { firstName, lastName, email, phone, os } = result.data;
-  const submittedAt = new Date().toUTCString();
+  const submittedAt = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date());
 
-  try {
-    const { error } = await resend.batch.send([
-      // Confirmation email → requester
+  // Run both operations concurrently and independently.
+  // Promise.allSettled guarantees both are always attempted regardless of
+  // whether the other one fails.
+  const [emailResult, sheetsResult] = await Promise.allSettled([
+    // Operation 1: Send confirmation + admin notification emails via Resend
+    resend.batch.send([
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
         to: [email],
         subject: `${firstName}, you're on the Ugle early access list ⚡`,
         react: EarlyAccessConfirmationEmail({ firstName, email, os }),
       },
-      // Notification email → admin
       {
         from: `Ugle <${env.RESEND_FROM_EMAIL}>`,
         to: [env.ADMIN_EMAIL],
@@ -70,24 +71,42 @@ export async function requestEarlyAccess(
           submittedAt,
         }),
       },
-    ]);
+    ]),
 
-    if (error) {
-      console.error("Resend batch error:", error);
-      return {
-        success: false,
-        message: "Something went wrong. Please try again.",
-        error: error.message,
-      };
-    }
+    // Operation 2: Append lead row to Google Sheets
+    new EarlyAccessSheetService().append({
+      firstName,
+      lastName,
+      email,
+      phone,
+      os,
+      submittedAt,
+    }),
+  ]);
 
-    return { success: true, message: "Request submitted" };
-  } catch (err) {
-    console.error("Early access request error:", err);
+  // Log individual failures server-side for visibility
+  if (emailResult.status === "rejected") {
+    console.error("[EarlyAccess] Resend failed:", emailResult.reason);
+  } else if (emailResult.value.error) {
+    console.error("[EarlyAccess] Resend batch error:", emailResult.value.error);
+  }
+
+  if (sheetsResult.status === "rejected") {
+    console.error("[EarlyAccess] Google Sheets failed:", sheetsResult.reason);
+  }
+
+  // Option A: succeed if at least one method captured the lead
+  const emailOk =
+    emailResult.status === "fulfilled" && !emailResult.value.error;
+  const sheetsOk = sheetsResult.status === "fulfilled";
+
+  if (!emailOk && !sheetsOk) {
     return {
       success: false,
       message: "Something went wrong. Please try again.",
-      error: "Submission failed",
+      error: "All submission methods failed",
     };
   }
+
+  return { success: true, message: "Request submitted" };
 }
