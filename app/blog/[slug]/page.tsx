@@ -390,6 +390,12 @@ const BLOG_POST_DATA: Record<
   },
 };
 
+export function generateStaticParams() {
+  return Object.keys(BLOG_POST_DATA).map((slug) => ({
+    slug,
+  }));
+}
+
 export default async function page({
   params,
 }: {
