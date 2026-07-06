@@ -8,6 +8,16 @@ const envSchema = z.object({
   RESEND_FROM_EMAIL: z.email(),
   // Admin inbox that receives new-subscriber notifications
   ADMIN_EMAIL: z.email(),
+
+  // Google Variables
+  GOOGLE_CLIENT_EMAIL: z.email(),
+  GOOGLE_PRIVATE_KEY: z
+    .string()
+    .min(10, "Private key is too short")
+    .transform((val) => {
+      return val.replace(/\\n/g, "\n");
+    }),
+  GOOGLE_SPREADSHEET_ID: z.string().min(5),
 });
 
 // Validate `process.env` against our schema
