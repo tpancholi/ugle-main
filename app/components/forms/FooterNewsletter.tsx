@@ -10,6 +10,10 @@ const initialState: ActionState = {
   message: "",
 };
 
+// Read once, outside the component — NEXT_PUBLIC_ vars are inlined at
+// build time, so this is safe and avoids re-checking on every render.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 export default function FooterNewsletter() {
   const [state, formAction, pending] = useActionState(
     newsletterJoin,
@@ -19,7 +23,6 @@ export default function FooterNewsletter() {
 
   const error = state?.error;
 
-  // Reset the widget after a failed submission so the token isn't reused
   useEffect(() => {
     if (!pending && state.error) {
       turnstileRef.current?.reset();
@@ -78,18 +81,31 @@ export default function FooterNewsletter() {
             </button>
           </div>
 
-          {/* Invisible/managed Turnstile widget — no name attr needed,
-              the library injects a hidden input called cf-turnstile-response */}
-          <div className="mt-2">
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-              options={{
-                size: "invisible",
-                appearance: "interaction-only",
-              }}
-            />
-          </div>
+          {/* Only mount the widget when a real site key is configured.
+              If NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing, the form still
+              submits fine — the server action fails open when the token
+              (or the whole Turnstile config) is absent. */}
+          {TURNSTILE_SITE_KEY && (
+            <div className="mt-2">
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={TURNSTILE_SITE_KEY}
+                options={{
+                  size: "invisible",
+                  appearance: "interaction-only",
+                }}
+                onError={() => {
+                  // Cloudflare's script itself failed to load/verify
+                  // (network blip, ad blocker, etc). Don't block the
+                  // user — just log it and let the server-side
+                  // fail-open logic handle the missing token.
+                  console.warn(
+                    "[Turnstile] Widget failed to load — submission will proceed without a token.",
+                  );
+                }}
+              />
+            </div>
+          )}
 
           <AnimatePresence>
             {error && (

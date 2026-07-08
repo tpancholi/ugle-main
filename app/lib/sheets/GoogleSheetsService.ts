@@ -1,27 +1,27 @@
 import { google } from "googleapis";
-import env from "@/app/lib/env";
+import { sheetsConfig } from "@/app/lib/env";
 
 export abstract class GoogleSheetsService {
-  // Each subclass declares which tab name it writes to
   protected abstract readonly sheetName: string;
 
-  /**
-   * Appends a single row of values to this service's sheet tab.
-   * Creates a new Google Auth client per call — safe for serverless/edge
-   * environments where persistent connections are not reliable.
-   */
   protected async appendRow(values: string[]): Promise<void> {
+    if (!sheetsConfig.success) {
+      throw new Error("Google Sheets is not configured");
+    }
+
+    const { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_SPREADSHEET_ID } =
+      sheetsConfig.data;
+
     const auth = new google.auth.JWT({
-      email: env.GOOGLE_CLIENT_EMAIL,
-      key: env.GOOGLE_PRIVATE_KEY,
+      email: GOOGLE_CLIENT_EMAIL,
+      key: GOOGLE_PRIVATE_KEY,
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
     const sheets = google.sheets({ version: "v4", auth });
 
     await sheets.spreadsheets.values.append({
-      spreadsheetId: env.GOOGLE_SPREADSHEET_ID,
-      // A1 notation: <SheetName>!A1 tells the API which tab to target
+      spreadsheetId: GOOGLE_SPREADSHEET_ID,
       range: `${this.sheetName}!A1`,
       valueInputOption: "USER_ENTERED",
       requestBody: {

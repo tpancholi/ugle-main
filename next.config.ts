@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-import "./app/lib/env";
 
 const nextConfig: NextConfig = {
   /* config options here */
