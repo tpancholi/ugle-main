@@ -145,7 +145,7 @@ export default function Workflow() {
               width={140}
               height={140}
               priority
-              className="rotate-[12deg] opacity-80 group-hover:rotate-[-4deg] group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out drop-shadow-[0_0_30px_rgba(117,192,67,0.35)] group-hover:drop-shadow-[0_0_48px_rgba(117,192,67,0.65)]"
+              className="rotate-12 opacity-80 group-hover:rotate-[-4deg] group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out drop-shadow-[0_0_30px_rgba(117,192,67,0.35)] group-hover:drop-shadow-[0_0_48px_rgba(117,192,67,0.65)]"
             />
           </div>
         </div>
