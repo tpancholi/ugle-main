@@ -83,6 +83,9 @@ export default function Footer() {
             <Link href="/blog" className="hover:text-white transition-colors">
               Blog
             </Link>
+            <Link href="/about" className="hover:text-white transition-colors">
+              About Us
+            </Link>
           </div>
 
           <div className="absolute bottom-0 right-0 z-0 pointer-events-none group">
