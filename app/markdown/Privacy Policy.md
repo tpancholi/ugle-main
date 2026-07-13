@@ -272,6 +272,26 @@ We do not route your local content through these providers.
 
 Ugle does not send your audio files, video files, transcripts, local indexes, search queries, search results, indexed file names, folder paths, or local media archive content to Keygen, Stripe, hosting providers, CDN providers, email tools, support tools, or crash reporting providers.
 
+### FFmpeg
+
+Ugle uses the [FFmpeg project](https://ffmpeg.org) under the GNU Lesser General
+Public License, version 2.1 or later (LGPL-2.1-or-later).
+
+This software uses libraries from the FFmpeg project under the LGPLv2.1.
+
+FFmpeg is copyright of the FFmpeg developers. The FFmpeg binaries distributed
+with Ugle are built by DeepShield from unmodified FFmpeg source, version
+8.1.2, with no --enable-gpl and no --enable-nonfree components.
+
+- Full license text: <https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html>
+  (incorporates GPL-2.0 by reference:
+   <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>)
+- Corresponding source code for the exact build we ship:
+  <https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.xz> — available for at least
+  three years from distribution.
+- "FFmpeg" is a trademark of Fabrice Bellard. Its use here does not imply
+  endorsement.
+
 ## **11\. Sharing of information**
 
 We do not sell your personal information.
