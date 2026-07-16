@@ -21,7 +21,7 @@ const BLOG_POST_DATA: Record<
     title: "Why we built Ugle local-first",
     meta: "4 min read",
     tag: "Product philosophy",
-    image: "/images/blogs/Why we built Ugle local-first.svg",
+    image: "/images/blogs/why-local-first.jpg",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
@@ -75,7 +75,7 @@ const BLOG_POST_DATA: Record<
     title: "The real cost of scrubbing timelines",
     meta: "3 min read",
     tag: "Workflow",
-    image: "/images/blogs/The real cost of scrubbing timelines.svg",
+    image: "/images/blogs/cost-of-scrubbing.jpg",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
@@ -121,7 +121,7 @@ const BLOG_POST_DATA: Record<
     title: "What 95% transcription accuracy actually means",
     meta: "5 min read",
     tag: "Product",
-    image: "/images/blogs/What transcription accuracy actually means.svg",
+    image: "/images/blogs/transcription-accuracy.jpg",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">
@@ -222,7 +222,7 @@ const BLOG_POST_DATA: Record<
     title: "The 90+ Languages Supported by Ugle",
     meta: "4 min read",
     tag: "Product",
-    image: "/images/blogs/The 90+ Languages Supported by Ugle.png",
+    image: "/images/blogs/languages-supported.png",
     content: (
       <>
         <p className="text-[20px] text-ugle-gray leading-[1.55] mb-8">

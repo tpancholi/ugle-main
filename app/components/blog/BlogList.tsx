@@ -13,7 +13,7 @@ const blogItems = [
     desc: "The first version of what became Ugle uploaded files to a server. We built it that way because it was easier — existing transcription APIs, no on-device model to maintain, faster to ship...",
     meta: "4 min read",
     tag: "Product philosophy",
-    image: "/images/blogs/Why we built Ugle local-first.svg",
+    image: "/images/blogs/why-local-first.jpg",
   },
   {
     path: "/blog/cost-of-scrubbing-timelines",
@@ -22,7 +22,7 @@ const blogItems = [
     desc: "A documentary editor we spoke to last year spends six to ten hours a week scrubbing through footage to find moments she already knows exist. She has watched most of it once...",
     meta: "3 min read",
     tag: "Workflow",
-    image: "/images/blogs/The real cost of scrubbing timelines.svg",
+    image: "/images/blogs/cost-of-scrubbing.jpg",
   },
   {
     path: "/blog/languages-supported",
@@ -31,7 +31,7 @@ const blogItems = [
     desc: "A search tool is only as useful as the language it can index. From the start, we designed Ugle's local-first engine to recognize more than just English — over 90 languages, entirely on-device.",
     meta: "4 min read",
     tag: "Product",
-    image: "/images/blogs/The 90+ Languages Supported by Ugle.png",
+    image: "/images/blogs/languages-supported.png",
   },
   {
     path: "/blog/what-transcription-accuracy-means",
@@ -40,7 +40,7 @@ const blogItems = [
     desc: "We say 95% accuracy. That number is word error rate measured against manually transcribed ground truth across languages, accents, recording conditions, and speaker types...",
     meta: "5 min read",
     tag: "Product",
-    image: "/images/blogs/What transcription accuracy actually means.svg",
+    image: "/images/blogs/transcription-accuracy.jpg",
   },
 ];
 
