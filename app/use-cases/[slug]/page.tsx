@@ -151,7 +151,7 @@ const USE_CASE_DATA: Record<
     badge: "Podcast Producers",
     subtitle: "Pull clips from 300 episodes without listening to any of them.",
     image: {
-      src: "/images/usecases/Podcasters.svg",
+      src: "/images/usecases/Podcasters.jpg",
       alt: "Ugle for podcast producers — search across hundreds of episodes",
     },
     content: (
@@ -224,7 +224,7 @@ const USE_CASE_DATA: Record<
     badge: "Journalists",
     subtitle: "A private, searchable archive of every source conversation.",
     image: {
-      src: "/images/usecases/Journalist.svg",
+      src: "/images/usecases/Journalist.jpg",
       alt: "Ugle for journalists — private, local, searchable source archive",
     },
     content: (

@@ -444,7 +444,7 @@ export default async function page({
 
         <SocialShare
           title={blogPost.title}
-          url={`https://ugle.app/blog/${slug}`}
+          url={`https://ugle.ai/blog/${slug}`}
         />
       </div>
       <section className="w-full border-t border-ugle-light/60 bg-[#F8FAF9] py-16 md:py-20">
