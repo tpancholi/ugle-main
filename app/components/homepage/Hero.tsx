@@ -120,7 +120,7 @@ function HeroStats() {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
   return (
-    <div className="pt-8 md:pt-12 pb-8 md:pb-0 border-t border-ugle-light/60 grid grid-cols-2 md:grid-cols-4 gap-16 md:gap-0 w-full max-w-4xl mx-auto text-center">
+    <div className="pt-8 md:pt-12 pb-8 md:pb-0 border-t border-ugle-light/60 grid grid-cols-2 md:grid-cols-4 gap-18 md:gap-0 w-full max-w-4xl mx-auto text-center">
       {heroStats.map((s, idx) => (
         <div
           key={idx}
@@ -143,7 +143,7 @@ function HeroStats() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute top-full left-0 right-0 z-10 pt-2 pointer-events-none"
+                className="hidden md:block absolute top-full left-0 right-0 z-10 pt-2 pointer-events-none"
               >
                 <p className="text-xs md:text-sm text-ugle-gray leading-tight font-medium max-w-48 mx-auto">
                   {s.context}
@@ -151,6 +151,11 @@ function HeroStats() {
               </motion.div>
             )}
           </AnimatePresence>
+          <div className="md:hidden absolute top-full left-0 right-0 z-10 pt-2 pointer-events-none">
+            <p className="text-xs md:text-sm text-ugle-gray leading-tight font-medium max-w-48 mx-auto">
+              {s.context}
+            </p>
+          </div>
         </div>
       ))}
     </div>
