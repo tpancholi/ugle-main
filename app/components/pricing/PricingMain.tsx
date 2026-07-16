@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Check, Mail } from "lucide-react";
 import Link from "next/link";
+import { CheckoutPanel, TrialPanel } from "./CheckoutForms";
+import { formatInr, planPricing } from "@/app/lib/pricing";
 
 // ── Shared check-list row ─────────────────────────────────────────────────────
 
@@ -23,24 +25,21 @@ function Feature({ text, dark = false }: { text: string; dark?: boolean }) {
 
 // ── Individual pricing panel ──────────────────────────────────────────────────
 function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
-  const price = isAnnual ? "$169" : "$20";
-  const origPrice = isAnnual ? "$199" : "$25";
+  const plan = isAnnual ? "annual" : "monthly";
+  const pricing = planPricing(plan);
   const period = isAnnual ? "per user, per year" : "per user, per month";
-  const loyaltyNote = isAnnual
-    ? "loyalty renewal rate · save ~15%"
-    : "loyalty renewal rate · save ~20%";
   const updatesNote = isAnnual
     ? "Updates included for 12 months"
     : "Updates included while subscribed";
 
   return (
-    <div className="max-w-2xl mx-auto mb-32">
+    <div className="max-w-2xl mx-auto mb-32 space-y-6">
       {/* Card — light style matching other panels */}
       <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
         {/* Header band */}
         <div className="bg-ugle-slate px-8 py-7">
           <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#75C043] mb-2">
-            Personal subscription
+            Personal subscription · India
           </div>
           <h2 className="text-[26px] font-extrabold text-white tracking-tight leading-tight">
             Private individuals buying with their own funds
@@ -50,7 +49,7 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
         {/* Body */}
         <div className="px-8 py-7 space-y-5">
           <div className="space-y-3">
-            <Feature text="1 personal licence" />
+            <Feature text="1 personal licence · 2 node-locked machines" />
             <Feature text="Unlimited library size" />
             <Link
               href="/blog/languages-supported"
@@ -66,49 +65,55 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
             <Feature text={updatesNote} />
           </div>
 
-          <div className="border-t border-ugle-light/60 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="border-t border-ugle-light/60 pt-5 space-y-5">
             <div>
               <div className="text-[13px] text-ugle-gray mb-0.5">{period}</div>
-              <div className="flex items-baseline gap-2">
-                <span className="line-through text-ugle-gray/40 text-sm">
-                  {origPrice}
-                </span>
+              <div className="flex items-baseline gap-2 flex-wrap">
                 <div className="text-[32px] font-extrabold text-ugle-slate tracking-tight leading-none">
-                  {price}
+                  {formatInr(pricing.base)}
                 </div>
+                <span className="text-[13px] text-ugle-gray">+ 18% GST</span>
               </div>
-              {isAnnual && (
-                <div className="text-[12px] text-ugle-gray/55 mt-0.5">
-                  loyalty renewal rate · save ~15%
-                </div>
-              )}
+              <div className="text-[12px] text-ugle-gray/70 mt-1">
+                Total today:{" "}
+                <span className="font-semibold text-ugle-slate">
+                  {formatInr(pricing.total)}
+                </span>
+              </div>
             </div>
-            <Link
-              href="/get-early-access"
-              className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors whitespace-nowrap"
-            >
-              {isAnnual ? "Buy Annual Licence" : "Buy Monthly Licence"}
-            </Link>
+            <CheckoutPanel plan={plan} />
           </div>
         </div>
       </div>
 
-      {/* Loyalty note — below the card */}
-      {isAnnual && (
-        <div className="mt-4 flex items-start gap-3 bg-[#F0F9EA] border border-[#75C043]/30 rounded-xl px-5 py-4">
-          <span className="text-[#5DA233] text-lg mt-0.5">&#10022;</span>
+      {/* Trial card */}
+      <div className="bg-white border border-ugle-light/60 rounded-2xl shadow-sm overflow-hidden">
+        <div className="px-8 py-6 space-y-4">
           <div>
-            <p className="text-sm font-semibold text-ugle-slate">
-              15% Loyalty Discount on every renewal
-            </p>
-            <p className="text-[13px] text-ugle-gray mt-0.5">
-              Prices shown reflect the loyalty rate for returning subscribers.
-              First-time price: <span className="font-semibold">$199/year</span>
-              .
+            <div className="font-mono text-xs tracking-[0.14em] uppercase text-[#5DA233] mb-1">
+              Free trial
+            </div>
+            <h3 className="text-lg font-bold text-ugle-slate">
+              Try Ugle for 15 days
+            </h3>
+            <p className="text-[13.5px] text-ugle-gray mt-1">
+              Full features · 2 machines · convert anytime from your manage link.
             </p>
           </div>
+          <TrialPanel />
         </div>
-      )}
+      </div>
+
+      <div className="text-center text-[13px] text-ugle-gray/70">
+        Already have a licence? Check your email for the manage link, or write{" "}
+        <a
+          href="mailto:support@ugle.ai"
+          className="text-[#5DA233] font-semibold hover:underline"
+        >
+          support@ugle.ai
+        </a>
+        .
+      </div>
     </div>
   );
 }
@@ -418,7 +423,7 @@ export default function PricingMain() {
             >
               Annual billing
               <span className="text-[11px] font-bold text-[#5DA233]">
-                save ~15%
+                best value
               </span>
             </button>
             <button

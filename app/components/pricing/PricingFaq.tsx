@@ -20,27 +20,27 @@ export default function PricingFaq() {
         {[
           {
             q: "Is there a free trial?",
-            a: "Yes. 14 days, no file limit, no credit card. At day 14, choose a licence or the app continues in read-only mode — your existing index stays searchable, with no new imports.",
+            a: "Yes. 15 days, no credit card. One trial per email. Activate on up to two machines. When the trial ends, purchase a monthly or annual licence to keep creating — your local index stays on your machine.",
+          },
+          {
+            q: "What do I pay?",
+            a: "Individual monthly is ₹1,000 + 18% GST (₹1,180 total). Individual annual is ₹10,000 + 18% GST (₹11,800 total). Payments are in INR via Cashfree (UPI, cards, netbanking).",
           },
           {
             q: "What counts as a seat?",
-            a: "One seat = one machine. Solo licences activate on up to two machines owned by the same person. Team licences are per-machine.",
+            a: "One personal licence activates on up to two node-locked machines owned by the same person. To move a machine, email support@ugle.ai.",
           },
           {
-            q: "What if I reinstall my OS?",
-            a: "Deactivate from Settings > Licence, then reactivate after reinstalling. Deactivate and reactivate as many times as needed.",
+            q: "How do renewals and cancellations work?",
+            a: "Licences are timed. Before expiry we email a renew link — you pay once to extend the same key. Cancel anytime from your manage link; access continues until the paid period ends.",
           },
           {
             q: "Does Ugle work offline?",
             a: "Yes. After activation, Ugle runs entirely without internet. Transcription, indexing, and search are all local. Internet is required for initial activation and updates only.",
           },
           {
-            q: "Is there a loyalty discount?",
-            a: "Yes. Individual subscribers receive a 15% loyalty discount on every subsequent renewal — annual drops from $199 to $169/year, monthly from $25 to $20/month.",
-          },
-          {
-            q: "Educational or non-commercial pricing?",
-            a: "Both are completely free. Education licences require verification of enrollment or employment at an accredited institution (processed within 2 business days). Non-commercial use requires no approval — just confirm you're not earning commercial benefits.",
+            q: "Educational pricing?",
+            a: "Education licences are free with verification of enrollment or employment at an accredited institution (typically within 2 business days).",
           },
         ].map((item, i) => (
           <div
