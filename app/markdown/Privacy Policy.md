@@ -2,8 +2,6 @@
 
 *Effective date: 1 July 2026   ·   Last updated: 14 July 2026*
 
-*Note: fields highlighted in black require completion before publication.*
-
 This Privacy Policy explains how DEEPSHIELD AI TECHNOLOGY LLP (LLPIN: ACB-4971), a limited liability partnership registered with the Registrar of Companies, Ahmedabad, having its registered office at 40 Oriyant Colony, Bhuj, Kachchh, Gujarat 370001, India (“we”, “us”, “our”), the entity that provides the Ugle.ai software (the “Software”), collects and handles personal data. We act as a Data Fiduciary under India’s Digital Personal Data Protection Act, 2023 (the “DPDPA”). By using the Software or our website, you acknowledge the practices described in this Policy. This Policy should be read together with our [Terms of Service](/terms).
 
 ## **1\.  Our local-first approach**
@@ -44,7 +42,7 @@ This Privacy Policy explains how DEEPSHIELD AI TECHNOLOGY LLP (LLPIN: ACB-4971),
 
 * Cloudfront— delivery of software downloads and updates.
 
-**4.2** A current list of our Data Processors, their functions and their locations is maintained at [ugle.ai/sub-processors](/sub-processors), and is updated whenever we add or change a Processor.
+**4.2** A current list of our Data Processors, their functions and their locations is maintained at [ugle.ai/sub-processors](/security), and is updated whenever we add or change a Processor.
 
 ## **5\.  International data transfers**
 
