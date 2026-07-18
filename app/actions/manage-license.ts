@@ -113,9 +113,11 @@ export async function requestManageLink(
     });
     const manageUrl = `${getAppUrl()}/manage?token=${encodeURIComponent(token)}`;
 
+    const { getSupportEmail } = await import("@/app/lib/env");
     const { error } = await new Resend(resendConfig.data.RESEND_API_KEY).emails.send({
       from: `Ugle <${resendConfig.data.RESEND_FROM_EMAIL}>`,
       to: [customer.email],
+      replyTo: getSupportEmail(),
       subject: "Your Ugle licence manage link",
       react: LicenseDeliveryEmail({
         email: customer.email,

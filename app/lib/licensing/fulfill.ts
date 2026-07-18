@@ -380,6 +380,7 @@ async function sendLicenseEmail(opts: {
   ).emails.send({
     from: `Ugle <${resendConfig.data.RESEND_FROM_EMAIL}>`,
     to: [opts.email],
+    replyTo: getSupportEmail(),
     subject:
       opts.plan === "trial"
         ? "Your Ugle 15-day trial licence"
