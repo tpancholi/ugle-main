@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { keygenConfig } from "@/app/lib/env";
 import type { PaidPlan, Plan } from "@/app/lib/pricing";
 
@@ -11,6 +12,34 @@ type KeygenResponse = {
   data?: KeygenResource | KeygenResource[];
   errors?: Array<{ title?: string; detail?: string; code?: string }>;
 };
+
+/**
+ * Mock mode: when KEYGEN_MOCK=true, no real Keygen API calls are made.
+ * The full checkout/webhook/DB/email pipeline still runs with a fake key,
+ * so testing never consumes the paid Keygen active-license quota.
+ */
+function isKeygenMock(): boolean {
+  return process.env.KEYGEN_MOCK === "true";
+}
+
+function mockExpiryFor(plan: Plan): string {
+  const d = new Date();
+  if (plan === "trial") d.setDate(d.getDate() + 15);
+  else if (plan === "monthly") d.setMonth(d.getMonth() + 1);
+  else d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString();
+}
+
+function mockLicense(plan: Plan): CreatedLicense {
+  const raw = randomUUID().replace(/-/g, "").toUpperCase();
+  const key = `MOCK-${raw.slice(0, 6)}-${raw.slice(6, 12)}-${raw.slice(12, 18)}`;
+  return {
+    id: `mock_${randomUUID()}`,
+    key,
+    expiry: mockExpiryFor(plan),
+    status: "ACTIVE",
+  };
+}
 
 function requireKeygen() {
   if (!keygenConfig.success) {
@@ -82,6 +111,7 @@ export async function createKeygenLicense(opts: {
   email: string;
   name?: string;
 }): Promise<CreatedLicense> {
+  if (isKeygenMock()) return mockLicense(opts.plan);
   const body = await keygenFetch("/licenses", {
     method: "POST",
     body: JSON.stringify({
@@ -111,6 +141,7 @@ export async function createKeygenLicense(opts: {
 export async function renewKeygenLicense(
   licenseId: string,
 ): Promise<CreatedLicense> {
+  if (isKeygenMock()) return { ...mockLicense("monthly"), id: licenseId };
   const body = await keygenFetch(`/licenses/${licenseId}/actions/renew`, {
     method: "POST",
   });
@@ -121,6 +152,7 @@ export async function changeKeygenLicensePolicy(
   licenseId: string,
   plan: PaidPlan,
 ): Promise<CreatedLicense> {
+  if (isKeygenMock()) return { ...mockLicense(plan), id: licenseId };
   const body = await keygenFetch(`/licenses/${licenseId}`, {
     method: "PATCH",
     body: JSON.stringify({
@@ -146,6 +178,7 @@ export async function convertKeygenLicenseToPaid(
   licenseId: string,
   plan: PaidPlan,
 ): Promise<CreatedLicense> {
+  if (isKeygenMock()) return { ...mockLicense(plan), id: licenseId };
   const expiry = new Date();
   if (plan === "monthly") {
     expiry.setMonth(expiry.getMonth() + 1);
@@ -175,18 +208,21 @@ export async function convertKeygenLicenseToPaid(
 }
 
 export async function suspendKeygenLicense(licenseId: string): Promise<void> {
+  if (isKeygenMock()) return;
   await keygenFetch(`/licenses/${licenseId}/actions/suspend`, {
     method: "POST",
   });
 }
 
 export async function reinstateKeygenLicense(licenseId: string): Promise<void> {
+  if (isKeygenMock()) return;
   await keygenFetch(`/licenses/${licenseId}/actions/reinstate`, {
     method: "POST",
   });
 }
 
 export async function revokeKeygenLicense(licenseId: string): Promise<void> {
+  if (isKeygenMock()) return;
   await keygenFetch(`/licenses/${licenseId}/actions/revoke`, {
     method: "POST",
   });
@@ -195,6 +231,7 @@ export async function revokeKeygenLicense(licenseId: string): Promise<void> {
 export async function listKeygenMachines(licenseId: string): Promise<
   Array<{ id: string; fingerprint: string; name: string | null }>
 > {
+  if (isKeygenMock()) return [];
   const body = await keygenFetch(`/licenses/${licenseId}/machines`);
   const list = Array.isArray(body.data) ? body.data : body.data ? [body.data] : [];
   return list.map((m) => ({
@@ -205,5 +242,6 @@ export async function listKeygenMachines(licenseId: string): Promise<
 }
 
 export async function deleteKeygenMachine(machineId: string): Promise<void> {
+  if (isKeygenMock()) return;
   await keygenFetch(`/machines/${machineId}`, { method: "DELETE" });
 }

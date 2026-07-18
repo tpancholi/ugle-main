@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, ne } from "drizzle-orm";
 import { Resend } from "resend";
 import { getDb } from "@/app/lib/db";
 import { customers, licenses, orders } from "@/app/lib/db/schema";
@@ -158,6 +158,46 @@ export async function fulfillPaidOrder(opts: {
     throw new Error("Order plan is not a paid plan");
   }
   const plan = order.plan as PaidPlan;
+
+  // Atomically claim the order. The Cashfree webhook and the /checkout/return
+  // page both call this function and can run concurrently; without an atomic
+  // guard both would fulfil the order and send a duplicate licence email.
+  // The conditional UPDATE only affects the row while it is still un-paid, so
+  // exactly one caller "wins" the claim and proceeds; the other returns early.
+  const claim = await db
+    .update(orders)
+    .set({
+      status: "paid",
+      cfPaymentId: opts.cfPaymentId ?? order.cfPaymentId,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(orders.id, order.id), ne(orders.status, "paid")))
+    .returning();
+  if (claim.length === 0) {
+    return { order, alreadyProcessed: true as const };
+  }
+
+  try {
+    return await fulfillClaimedOrder({ order, plan, cfPaymentId: opts.cfPaymentId });
+  } catch (err) {
+    // Roll the claim back so a later retry (webhook replay or return-page
+    // refresh) can re-attempt fulfilment instead of leaving a paid order with
+    // no licence.
+    await db
+      .update(orders)
+      .set({ status: "pending", updatedAt: new Date() })
+      .where(eq(orders.id, order.id));
+    throw err;
+  }
+}
+
+async function fulfillClaimedOrder(opts: {
+  order: typeof orders.$inferSelect;
+  plan: PaidPlan;
+  cfPaymentId?: string;
+}) {
+  const db = getDb();
+  const { order, plan } = opts;
 
   const [customer] = await db
     .select()
