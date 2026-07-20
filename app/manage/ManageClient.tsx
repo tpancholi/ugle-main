@@ -26,6 +26,7 @@ export function ManageClient({
           name="email"
           type="email"
           required
+          aria-label="Email"
           placeholder="you@example.com"
           className="w-full rounded-lg border border-ugle-light/70 px-3 py-2.5 text-sm outline-none focus:border-ugle-green"
         />
@@ -36,13 +37,13 @@ export function ManageClient({
         >
           {pending ? "Sending…" : "Email manage link"}
         </button>
-        {state.message && (
-          <p
-            className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"}`}
-          >
-            {state.message}
-          </p>
-        )}
+        <p
+          role="status"
+          aria-live="polite"
+          className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"} ${state.message ? "" : "sr-only"}`}
+        >
+          {state.message}
+        </p>
       </form>
     );
   }
@@ -57,13 +58,13 @@ export function ManageClient({
       >
         {pending ? "Updating…" : "Cancel renewal reminders"}
       </button>
-      {state.message && (
-        <p
-          className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"}`}
-        >
-          {state.message}
-        </p>
-      )}
+      <p
+        role="status"
+        aria-live="polite"
+        className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"} ${state.message ? "" : "sr-only"}`}
+      >
+        {state.message}
+      </p>
     </form>
   );
 }

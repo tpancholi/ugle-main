@@ -67,12 +67,14 @@ export default async function ManagePage({
   }
 
   const db = getDb();
-  const [customer] = await db
-    .select()
-    .from(customers)
-    .where(eq(customers.id, session.customerId))
-    .limit(1);
-  const license = await getLatestLicenseForCustomer(session.customerId);
+  const [[customer], license] = await Promise.all([
+    db
+      .select()
+      .from(customers)
+      .where(eq(customers.id, session.customerId))
+      .limit(1),
+    getLatestLicenseForCustomer(session.customerId),
+  ]);
 
   if (!customer || !license) {
     return (

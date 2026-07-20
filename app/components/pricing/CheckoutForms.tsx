@@ -45,11 +45,17 @@ export function CheckoutPanel({ plan }: { plan: PaidPlan }) {
     <form action={action} className="space-y-3">
       <input type="hidden" name="plan" value={plan} />
       <div className="grid sm:grid-cols-2 gap-3">
-        <input name="name" placeholder="Name (optional)" className={inputClass} />
+        <input
+          name="name"
+          aria-label="Name (optional)"
+          placeholder="Name (optional)"
+          className={inputClass}
+        />
         <input
           name="email"
           type="email"
           required
+          aria-label="Email"
           placeholder="Email"
           className={inputClass}
         />
@@ -58,6 +64,7 @@ export function CheckoutPanel({ plan }: { plan: PaidPlan }) {
         name="phone"
         type="tel"
         required
+        aria-label="Mobile (for UPI / Cashfree)"
         placeholder="Mobile (for UPI / Cashfree)"
         className={inputClass}
       />
@@ -79,13 +86,13 @@ export function CheckoutPanel({ plan }: { plan: PaidPlan }) {
             ? "Buy Annual Licence"
             : "Buy Monthly Licence"}
       </button>
-      {state.message && (
-        <p
-          className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"}`}
-        >
-          {state.message}
-        </p>
-      )}
+      <p
+        role="status"
+        aria-live="polite"
+        className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"} ${state.message ? "" : "sr-only"}`}
+      >
+        {state.message}
+      </p>
     </form>
   );
 }
@@ -96,11 +103,17 @@ export function TrialPanel() {
   return (
     <form action={action} className="space-y-3">
       <div className="grid sm:grid-cols-2 gap-3">
-        <input name="name" placeholder="Name (optional)" className={inputClass} />
+        <input
+          name="name"
+          aria-label="Name (optional)"
+          placeholder="Name (optional)"
+          className={inputClass}
+        />
         <input
           name="email"
           type="email"
           required
+          aria-label="Email"
           placeholder="Email"
           className={inputClass}
         />
@@ -115,13 +128,13 @@ export function TrialPanel() {
       >
         {pending ? "Issuing trial…" : "Start 15-day trial"}
       </button>
-      {state.message && (
-        <p
-          className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"}`}
-        >
-          {state.message}
-        </p>
-      )}
+      <p
+        role="status"
+        aria-live="polite"
+        className={`text-sm ${state.success ? "text-[#5DA233]" : "text-red-600"} ${state.message ? "" : "sr-only"}`}
+      >
+        {state.message}
+      </p>
     </form>
   );
 }
