@@ -65,6 +65,23 @@ TURNSTILE_SECRET_KEY="1x0000000000000000000000000000000AA"
 
 ---
 
+## Database (licensing / payments)
+
+Licensing uses Drizzle ORM with `@neondatabase/serverless`:
+- **HTTP** (`getDb`) for ordinary reads/writes
+- **WebSocket Pool** (`withCustomerLock`) for payment fulfill/refund so a Postgres
+  session advisory lock can be held across Keygen HTTP calls
+
+That stack talks to Neon — it will **not** work against a plain local Postgres instance without swapping drivers.
+
+For local development, use one of:
+- A [Neon](https://neon.tech) database (or Neon branch) and set `DATABASE_URL` to its connection string
+- Or swap `app/lib/db/index.ts` to `node-postgres` / `postgres.js` if you need a local Postgres
+
+Schema workflow:
+- **Dev prototype:** `bun run db:push` syncs the schema directly (fine for empty/dev DBs only)
+- **Production:** `bun run db:generate` → commit files under `drizzle/` → `bun run db:migrate`
+
 ## Getting Started
 
 First, install dependencies:

@@ -4,7 +4,7 @@ import { loadEnvConfig } from "@next/env";
 loadEnvConfig(process.cwd());
 
 async function run() {
-  const { turnstileConfig, resendConfig, sheetsConfig } = await import(
+  const { turnstileConfig, resendConfig, sheetsConfig, keygenConfig, cashfreeConfig, databaseConfig } = await import(
     "../app/lib/env"
   );
 
@@ -16,6 +16,15 @@ async function run() {
   }
   if (!sheetsConfig.success) {
     console.warn("⚠️  Google Sheets is not configured — sheet logging disabled.");
+  }
+  if (!keygenConfig.success) {
+    console.warn("⚠️  Keygen is not configured — trial/licence issuance disabled.");
+  }
+  if (!cashfreeConfig.success) {
+    console.warn("⚠️  Cashfree is not configured — checkout disabled.");
+  }
+  if (!databaseConfig.success) {
+    console.warn("⚠️  DATABASE_URL is not configured — licensing persistence disabled.");
   }
 
   console.log("✅ Environment check complete — build will proceed regardless.");

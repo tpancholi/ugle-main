@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1784732374531,
+      "tag": "0000_famous_tenebrous",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784735623338,
+      "tag": "0001_harsh_secret_warriors",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784737008984,
+      "tag": "0002_fantastic_justin_hammer",
+      "breakpoints": true
+    }
+  ]
+}
