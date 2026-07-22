@@ -88,6 +88,7 @@ export type CreatedLicense = {
   key: string;
   expiry: string | null;
   status: string;
+  metadata?: Record<string, unknown>;
 };
 
 function asSingle(data: KeygenResponse["data"]): KeygenResource {
@@ -103,13 +104,31 @@ function mapLicense(data: KeygenResource): CreatedLicense {
     key: String(data.attributes.key ?? ""),
     expiry: (data.attributes.expiry as string | null) ?? null,
     status: String(data.attributes.status ?? "ACTIVE"),
+    metadata: (data.attributes.metadata as Record<string, unknown> | undefined) ?? {},
   };
+}
+
+export async function getKeygenLicense(licenseId: string): Promise<CreatedLicense> {
+  if (isKeygenMock()) {
+    return { ...mockLicense("monthly"), id: licenseId, metadata: {} };
+  }
+  const body = await keygenFetch(`/licenses/${licenseId}`);
+  return mapLicense(asSingle(body.data));
+}
+
+/** True if this Cashfree order already mutated the Keygen licence (retry-safe). */
+export function keygenAlreadyAppliedToOrder(
+  license: CreatedLicense,
+  cashfreeOrderId: string,
+): boolean {
+  return license.metadata?.lastCashfreeOrderId === cashfreeOrderId;
 }
 
 export async function createKeygenLicense(opts: {
   plan: Plan;
   email: string;
   name?: string;
+  cashfreeOrderId?: string;
 }): Promise<CreatedLicense> {
   if (isKeygenMock()) return mockLicense(opts.plan);
   const body = await keygenFetch("/licenses", {
@@ -123,6 +142,9 @@ export async function createKeygenLicense(opts: {
             email: opts.email,
             plan: opts.plan,
             source: "website",
+            ...(opts.cashfreeOrderId
+              ? { lastCashfreeOrderId: opts.cashfreeOrderId }
+              : {}),
           },
         },
         relationships: {
@@ -144,6 +166,63 @@ export async function renewKeygenLicense(
   if (isKeygenMock()) return { ...mockLicense("monthly"), id: licenseId };
   const body = await keygenFetch(`/licenses/${licenseId}/actions/renew`, {
     method: "POST",
+  });
+  return mapLicense(asSingle(body.data));
+}
+
+/**
+ * Atomically set expiry + lastCashfreeOrderId. Idempotent when metadata already
+ * records this Cashfree order (safe webhook retries).
+ */
+export async function extendKeygenLicenseForOrder(
+  licenseId: string,
+  plan: PaidPlan,
+  cashfreeOrderId: string,
+): Promise<CreatedLicense> {
+  if (isKeygenMock()) {
+    return {
+      ...mockLicense(plan),
+      id: licenseId,
+      metadata: { lastCashfreeOrderId: cashfreeOrderId, plan },
+    };
+  }
+  const current = await getKeygenLicense(licenseId);
+  if (keygenAlreadyAppliedToOrder(current, cashfreeOrderId)) {
+    return current;
+  }
+
+  const base =
+    current.expiry && new Date(current.expiry) > new Date()
+      ? new Date(current.expiry)
+      : new Date();
+  if (plan === "monthly") {
+    base.setMonth(base.getMonth() + 1);
+  } else {
+    base.setFullYear(base.getFullYear() + 1);
+  }
+
+  const body = await keygenFetch(`/licenses/${licenseId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      data: {
+        type: "licenses",
+        id: licenseId,
+        attributes: {
+          expiry: base.toISOString(),
+          metadata: {
+            ...(current.metadata ?? {}),
+            plan,
+            source: "website",
+            lastCashfreeOrderId: cashfreeOrderId,
+          },
+        },
+        relationships: {
+          policy: {
+            data: { type: "policies", id: policyIdForPlan(plan) },
+          },
+        },
+      },
+    }),
   });
   return mapLicense(asSingle(body.data));
 }
@@ -177,6 +256,7 @@ export async function changeKeygenLicensePolicy(
 export async function convertKeygenLicenseToPaid(
   licenseId: string,
   plan: PaidPlan,
+  cashfreeOrderId?: string,
 ): Promise<CreatedLicense> {
   if (isKeygenMock()) return { ...mockLicense(plan), id: licenseId };
   const expiry = new Date();
@@ -194,7 +274,11 @@ export async function convertKeygenLicenseToPaid(
         id: licenseId,
         attributes: {
           expiry: expiry.toISOString(),
-          metadata: { plan, source: "website" },
+          metadata: {
+            plan,
+            source: "website",
+            ...(cashfreeOrderId ? { lastCashfreeOrderId: cashfreeOrderId } : {}),
+          },
         },
         relationships: {
           policy: {

@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyCashfreeWebhookSignature } from "@/app/lib/cashfree";
 import { getDb } from "@/app/lib/db";
@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
     `${eventType}:${orderId || "unknown"}:${payload.event_time || timestamp}`;
 
   const db = getDb();
+  let resumeFailedAttempt = false;
 
   try {
     await db.insert(webhookEvents).values({
@@ -90,8 +91,17 @@ export async function POST(req: NextRequest) {
       payload,
     });
   } catch {
-    // Unique event id → already received
-    return NextResponse.json({ ok: true, duplicate: true });
+    // Duplicate event id — only skip if the prior attempt finished successfully.
+    const [existing] = await db
+      .select()
+      .from(webhookEvents)
+      .where(eq(webhookEvents.eventId, eventId))
+      .limit(1);
+    if (existing?.processedAt) {
+      return NextResponse.json({ ok: true, duplicate: true });
+    }
+    // Prior attempt inserted the row then failed — retry processing.
+    resumeFailedAttempt = true;
   }
 
   try {
@@ -107,7 +117,10 @@ export async function POST(req: NextRequest) {
           .update(orders)
           .set({ status: "failed", updatedAt: new Date() })
           .where(
-            and(eq(orders.cashfreeOrderId, orderId), eq(orders.status, "pending")),
+            and(
+              eq(orders.cashfreeOrderId, orderId),
+              inArray(orders.status, ["pending", "fulfilling"]),
+            ),
           );
       }
       await sendSupportAlert({
@@ -123,7 +136,10 @@ export async function POST(req: NextRequest) {
           .update(orders)
           .set({ status: "dropped", updatedAt: new Date() })
           .where(
-            and(eq(orders.cashfreeOrderId, orderId), eq(orders.status, "pending")),
+            and(
+              eq(orders.cashfreeOrderId, orderId),
+              inArray(orders.status, ["pending", "fulfilling"]),
+            ),
           );
       }
       await sendSupportAlert({
@@ -146,10 +162,13 @@ export async function POST(req: NextRequest) {
 
     await db
       .update(webhookEvents)
-      .set({ processedAt: new Date() })
+      .set({ processedAt: new Date(), error: null })
       .where(eq(webhookEvents.eventId, eventId));
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      ...(resumeFailedAttempt ? { resumed: true } : {}),
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Webhook processing failed";
     const isTerminal =

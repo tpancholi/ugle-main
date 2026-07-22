@@ -13,6 +13,7 @@ import {
 export const planEnum = pgEnum("plan", ["trial", "monthly", "annual"]);
 export const orderStatusEnum = pgEnum("order_status", [
   "pending",
+  "fulfilling",
   "paid",
   "failed",
   "refunded",

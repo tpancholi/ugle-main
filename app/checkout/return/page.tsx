@@ -33,6 +33,28 @@ export default async function CheckoutReturnPage({
         status = "paid";
         message =
           "Payment received. Check your email for your licence key and manage link.";
+      } else if (
+        local?.status === "fulfilling" ||
+        local?.status === "pending"
+      ) {
+        // Still in flight — peek Cashfree for UX only.
+        const cf = await getCashfreeOrder(orderId);
+        if (cf.orderStatus === "PAID" || local.status === "fulfilling") {
+          status = "pending";
+          message =
+            "Payment received by Cashfree. We’re issuing your licence now — check your email in a moment.";
+        } else if (
+          cf.orderStatus === "ACTIVE" ||
+          cf.orderStatus === "PENDING"
+        ) {
+          status = "pending";
+          message =
+            "Payment is still processing. We’ll email your licence as soon as Cashfree confirms it.";
+        } else {
+          status = "pending";
+          message =
+            "We’re still confirming with Cashfree. If you were charged, your licence email will arrive within a few minutes.";
+        }
       } else if (local?.status === "refunded") {
         status = "failed";
         message =
@@ -45,7 +67,7 @@ export default async function CheckoutReturnPage({
         message =
           "We couldn’t confirm a successful payment for this order. You have not been charged for a licence yet — try again from Pricing, or contact support.";
       } else {
-        // Peek Cashfree for UX only — never fulfil or mutate order status here.
+        // Unknown / missing local row — peek Cashfree for UX only.
         const cf = await getCashfreeOrder(orderId);
         if (cf.orderStatus === "PAID") {
           status = "pending";
