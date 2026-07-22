@@ -7,8 +7,8 @@ import { licenses } from "@/app/lib/db/schema";
 import { databaseConfig } from "@/app/lib/env";
 import { verifyManageJwt } from "@/app/lib/manage-token";
 import {
+  getCustomerByEmail,
   getLatestLicenseForCustomer,
-  upsertCustomer,
 } from "@/app/lib/licensing/fulfill";
 
 export type ManageState = {
@@ -56,7 +56,8 @@ export async function cancelRenewal(
         "Auto-renew reminders cancelled. Your licence stays valid until the current period ends.",
     };
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Could not cancel";
+    console.error("[cancelRenewal]", err);
+    const msg = "Could not cancel. Please try again later.";
     return { success: false, message: msg, error: msg };
   }
 }
@@ -85,14 +86,19 @@ export async function requestManageLink(
       };
     }
 
-    const customer = await upsertCustomer({ email: parsed.data.email });
+    const customer = await getCustomerByEmail(parsed.data.email);
+    // Always return the same success copy so callers cannot enumerate licences by email.
+    const opaqueOk: ManageState = {
+      success: true,
+      message: "If that email has a licence, a manage link is on its way.",
+    };
+    if (!customer) {
+      return opaqueOk;
+    }
+
     const license = await getLatestLicenseForCustomer(customer.id);
     if (!license) {
-      return {
-        success: false,
-        message: "No licence found for that email.",
-        error: "no_license",
-      };
+      return opaqueOk;
     }
 
     // Lazy import to avoid circular deps with fulfill email helper
@@ -133,12 +139,10 @@ export async function requestManageLink(
     if (error) {
       throw new Error(`Failed to send manage link: ${error.message}`);
     }
-    return {
-      success: true,
-      message: "If that email has a licence, a manage link is on its way.",
-    };
+    return opaqueOk;
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Could not send link";
+    console.error("[requestManageLink]", err);
+    const msg = "Could not send link. Please try again later.";
     return { success: false, message: msg, error: msg };
   }
 }

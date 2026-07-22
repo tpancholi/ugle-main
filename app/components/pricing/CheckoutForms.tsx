@@ -119,14 +119,15 @@ export function TrialPanel() {
         />
       </div>
       <p className="text-[12.5px] text-ugle-gray leading-relaxed">
-        15 days · 2 machines · no payment required. One trial per email.
+        15 days · 1 machine · no payment. Submit a request — we email your key
+        after review. One trial per email.
       </p>
       <button
         type="submit"
         disabled={pending}
         className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3 border border-ugle-slate text-ugle-slate font-bold text-[14px] rounded-[10px] hover:bg-ugle-slate hover:text-white transition-colors disabled:opacity-60"
       >
-        {pending ? "Issuing trial…" : "Start 15-day trial"}
+        {pending ? "Sending request…" : "Request 15-day trial"}
       </button>
       <p
         role="status"

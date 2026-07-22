@@ -150,6 +150,7 @@ export async function POST(req: NextRequest) {
 
     // Return 200 so Cashfree doesn't hammer retries forever after alert;
     // ops can replay from logs. Change to 500 if you prefer Cashfree retries.
-    return NextResponse.json({ ok: false, error: message }, { status: 200 });
+    // Do not echo internal error details in the HTTP response.
+    return NextResponse.json({ ok: false }, { status: 200 });
   }
 }

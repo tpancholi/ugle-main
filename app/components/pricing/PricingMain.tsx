@@ -97,7 +97,7 @@ function IndividualsPanel({ isAnnual }: { isAnnual: boolean }) {
               Try Ugle for 15 days
             </h3>
             <p className="text-[13.5px] text-ugle-gray mt-1">
-              Full features · 2 machines · convert anytime from your manage link.
+              Full features · 1 machine · key emailed by our team after review.
             </p>
           </div>
           <TrialPanel />

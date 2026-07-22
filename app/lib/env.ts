@@ -31,12 +31,12 @@ const sheetsSchema = z.object({
 });
 
 const keygenSchema = z.object({
-  KEYGEN_ACCOUNT_ID: z.string().uuid(),
-  KEYGEN_PRODUCT_ID: z.string().uuid(),
+  KEYGEN_ACCOUNT_ID: z.uuid(),
+  KEYGEN_PRODUCT_ID: z.uuid(),
   KEYGEN_PRODUCT_TOKEN: z.string().min(10),
-  KEYGEN_POLICY_TRIAL: z.string().uuid(),
-  KEYGEN_POLICY_MONTHLY: z.string().uuid(),
-  KEYGEN_POLICY_ANNUAL: z.string().uuid(),
+  KEYGEN_POLICY_TRIAL: z.uuid(),
+  KEYGEN_POLICY_MONTHLY: z.uuid(),
+  KEYGEN_POLICY_ANNUAL: z.uuid(),
 });
 
 const cashfreeSchema = z.object({

@@ -118,7 +118,7 @@ export function LicenseDeliveryEmail({
       </p>
       <p style={{ fontSize: "15px", color: "#3f3f46", lineHeight: 1.6 }}>
         {plan === "trial"
-          ? "Your 15-day Ugle trial is ready. Activate with the licence key below on up to 2 machines."
+          ? "Your 15-day Ugle trial is ready. Activate with the licence key below on 1 machine."
           : `Thanks for purchasing ${PLAN_LABEL[plan]}. Your licence key is below.`}
       </p>
 
@@ -227,19 +227,48 @@ export function PaymentSupportAlertEmail({
   plan,
   details,
 }: {
-  kind: "success" | "failed" | "dropped" | "stuck" | "refund";
+  kind: "success" | "failed" | "dropped" | "stuck" | "refund" | "trial_request";
   email: string;
   plan: string;
   details: string;
 }) {
+  const badge =
+    kind === "trial_request" ? "Trial request" : `Payment ${kind}`;
   return (
-    <EmailShell badge={`Payment ${kind}`}>
+    <EmailShell badge={badge}>
       <p style={{ fontSize: "15px", color: "#3f3f46", lineHeight: 1.6 }}>
         <strong>Customer:</strong> {email}
         <br />
         <strong>Plan:</strong> {plan}
         <br />
-        <strong>Details:</strong> {details}
+        <strong>Details:</strong>
+        <br />
+        <span style={{ whiteSpace: "pre-wrap" }}>{details}</span>
+      </p>
+    </EmailShell>
+  );
+}
+
+export function TrialRequestReceivedEmail({
+  name,
+  email,
+}: {
+  name?: string;
+  email: string;
+}) {
+  return (
+    <EmailShell badge="Trial request">
+      <p style={{ fontSize: "15px", color: "#3f3f46", lineHeight: 1.6 }}>
+        Hi{name ? ` ${name}` : ""},
+      </p>
+      <p style={{ fontSize: "15px", color: "#3f3f46", lineHeight: 1.6 }}>
+        We received your request for a 15-day Ugle trial for{" "}
+        <strong>{email}</strong>. Our team will review it and email your
+        licence key shortly.
+      </p>
+      <p style={{ fontSize: "15px", color: "#3f3f46", lineHeight: 1.6 }}>
+        If you have questions in the meantime, reply to this email or write to
+        support@ugle.ai.
       </p>
     </EmailShell>
   );

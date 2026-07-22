@@ -5,8 +5,13 @@ import { customers, licenses, orders } from "@/app/lib/db/schema";
 import {
   getAppUrl,
   getSupportEmail,
+  databaseConfig,
   resendConfig,
 } from "@/app/lib/env";
+import {
+  DISPOSABLE_EMAIL_MESSAGE,
+  isDisposableEmail,
+} from "@/app/lib/disposable-email";
 import {
   convertKeygenLicenseToPaid,
   createKeygenLicense,
@@ -20,6 +25,7 @@ import { PLAN_LABEL, formatInr, planPricing } from "@/app/lib/pricing";
 import {
   LicenseDeliveryEmail,
   PaymentSupportAlertEmail,
+  TrialRequestReceivedEmail,
 } from "@/app/components/email-templates/LicenseTemplates";
 
 export async function upsertCustomer(opts: {
@@ -57,6 +63,16 @@ export async function upsertCustomer(opts: {
   return created;
 }
 
+export async function getCustomerByEmail(email: string) {
+  const db = getDb();
+  const [row] = await db
+    .select()
+    .from(customers)
+    .where(eq(customers.email, email.trim().toLowerCase()))
+    .limit(1);
+  return row ?? null;
+}
+
 export async function getLatestLicenseForCustomer(customerId: string) {
   const db = getDb();
   const [row] = await db
@@ -80,59 +96,72 @@ export async function customerHasUsedTrial(customerId: string) {
   return Boolean(row);
 }
 
-export async function issueTrialLicense(opts: {
+export async function requestTrialLicense(opts: {
   email: string;
   name?: string;
 }) {
-  const customer = await upsertCustomer({
-    email: opts.email,
-    name: opts.name,
-  });
-
-  if (await customerHasUsedTrial(customer.id)) {
+  if (!resendConfig.success) {
     throw new Error(
-      "A trial has already been issued for this email. Please purchase a licence or contact support.",
+      "Email is not configured — trial request cannot be delivered to support",
     );
   }
 
-  const keygen = await createKeygenLicense({
-    plan: "trial",
-    email: customer.email,
-    name: opts.name,
-  });
+  const email = opts.email.trim().toLowerCase();
+  const name = opts.name?.trim() || undefined;
 
-  const db = getDb();
-  const [license] = await db
-    .insert(licenses)
-    .values({
-      customerId: customer.id,
-      keygenLicenseId: keygen.id,
-      keygenLicenseKey: keygen.key,
-      plan: "trial",
-      status: "trial",
-      expiresAt: keygen.expiry ? new Date(keygen.expiry) : null,
-      trialUsed: true,
-    })
-    .returning();
+  if (isDisposableEmail(email)) {
+    throw new Error(DISPOSABLE_EMAIL_MESSAGE);
+  }
 
-  await sendLicenseEmail({
-    email: customer.email,
-    name: opts.name,
-    plan: "trial",
-    licenseKey: keygen.key,
-    expiresAt: license.expiresAt,
-    customerId: customer.id,
-  });
+  // If we already issued a trial for this email in our DB, tell the user
+  // (paid/manual fulfilment may have recorded it). Do not call Keygen.
+  if (databaseConfig.success) {
+    try {
+      const customer = await upsertCustomer({ email, name });
+      if (await customerHasUsedTrial(customer.id)) {
+        throw new Error(
+          "A trial has already been issued for this email. Please purchase a licence or contact support.",
+        );
+      }
+    } catch (err) {
+      if (
+        err instanceof Error &&
+        (err.message.startsWith("A trial has already been issued") ||
+          err.message === DISPOSABLE_EMAIL_MESSAGE)
+      ) {
+        throw err;
+      }
+      // DB optional for the request path — still notify support below.
+      console.error("[requestTrialLicense] DB check skipped:", err);
+    }
+  }
 
   await sendSupportAlert({
-    subject: `Trial issued: ${customer.email}`,
-    kind: "success",
-    email: customer.email,
+    subject: `Trial request: ${email}`,
+    kind: "trial_request",
+    email,
     plan: "trial",
-    details: `Keygen license ${keygen.id}`,
+    details: [
+      "Manual trial key needed — do not auto-issue from the website.",
+      name ? `Name: ${name}` : "Name: (not provided)",
+      `Requested at: ${new Date().toISOString()}`,
+    ].join("\n"),
   });
 
-  return { customer, license, key: keygen.key };
+  // Confirm to the requester (no licence key — support will send it).
+  const { error } = await new Resend(resendConfig.data.RESEND_API_KEY).emails.send({
+    from: `Ugle <${resendConfig.data.RESEND_FROM_EMAIL}>`,
+    to: [email],
+    replyTo: getSupportEmail(),
+    subject: "We received your Ugle trial request",
+    react: TrialRequestReceivedEmail({ name, email }),
+  });
+
+  if (error) {
+    console.error("[requestTrialLicense] requester email failed:", error.message);
+  }
+
+  return { email, name };
 }
 
 export async function fulfillPaidOrder(opts: {
@@ -447,7 +476,7 @@ async function sendLicenseEmail(opts: {
 
 export async function sendSupportAlert(opts: {
   subject: string;
-  kind: "success" | "failed" | "dropped" | "stuck" | "refund";
+  kind: "success" | "failed" | "dropped" | "stuck" | "refund" | "trial_request";
   email: string;
   plan: string;
   details: string;
@@ -459,7 +488,10 @@ export async function sendSupportAlert(opts: {
   const { error } = await new Resend(resendConfig.data.RESEND_API_KEY).emails.send({
     from: `Ugle <${resendConfig.data.RESEND_FROM_EMAIL}>`,
     to: unique,
-    subject: `[Ugle payments] ${opts.subject}`,
+    subject:
+      opts.kind === "trial_request"
+        ? `[Ugle trial] ${opts.subject}`
+        : `[Ugle payments] ${opts.subject}`,
     react: PaymentSupportAlertEmail(opts),
   });
 

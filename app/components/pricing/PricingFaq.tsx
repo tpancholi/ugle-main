@@ -20,7 +20,7 @@ export default function PricingFaq() {
         {[
           {
             q: "Is there a free trial?",
-            a: "Yes. 15 days, no credit card. One trial per email. Activate on up to two machines. When the trial ends, purchase a monthly or annual licence to keep creating — your local index stays on your machine.",
+            a: "Yes. Request a 15-day trial (no credit card). Our team reviews the request and emails your licence key. One trial per email. Activate on one machine. When the trial ends, purchase a monthly or annual licence to keep creating — your local index stays on your machine.",
           },
           {
             q: "What do I pay?",

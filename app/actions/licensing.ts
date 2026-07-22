@@ -14,7 +14,7 @@ import {
 } from "@/app/lib/env";
 import {
   getLatestLicenseForCustomer,
-  issueTrialLicense,
+  requestTrialLicense,
   upsertCustomer,
 } from "@/app/lib/licensing/fulfill";
 import { planPricing, type PaidPlan } from "@/app/lib/pricing";
@@ -53,15 +53,26 @@ function requireLicensingStack() {
   }
 }
 
+function clientError(
+  err: unknown,
+  fallback: string,
+  isUserFacing?: (message: string) => boolean,
+): string {
+  if (err instanceof Error && isUserFacing?.(err.message)) {
+    return err.message;
+  }
+  return fallback;
+}
+
 export async function startTrial(
   _prev: LicensingActionState,
   formData: FormData,
 ): Promise<LicensingActionState> {
   try {
-    requireLicensingStack();
+    // Trial is a human-reviewed request — no Keygen auto-issue, no DB required.
     if (!resendConfig.success) {
       throw new Error(
-        "Email is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL). Cannot deliver licence key.",
+        "Email is not configured (RESEND_API_KEY / RESEND_FROM_EMAIL). Cannot deliver trial request.",
       );
     }
     const parsed = trialSchema.safeParse({
@@ -73,14 +84,21 @@ export async function startTrial(
       return { success: false, message: msg, error: msg };
     }
 
-    await issueTrialLicense(parsed.data);
+    await requestTrialLicense(parsed.data);
     return {
       success: true,
       message:
-        "Trial licence created. Check your email for the key and manage link.",
+        "Request received. Our team will email your trial licence key shortly.",
     };
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Could not start trial";
+    console.error("[startTrial]", err);
+    const msg = clientError(
+      err,
+      "Could not submit trial request. Please try again later.",
+      (m) =>
+        m.startsWith("A trial has already been issued") ||
+        m.startsWith("Please use a permanent email address"),
+    );
     return { success: false, message: msg, error: msg };
   }
 }
@@ -165,7 +183,8 @@ export async function startCheckout(
       cashfreeMode: cashfreeConfig.data.CASHFREE_ENV,
     };
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Checkout failed";
+    console.error("[startCheckout]", err);
+    const msg = "Checkout failed. Please try again later.";
     return { success: false, message: msg, error: msg };
   }
 }
