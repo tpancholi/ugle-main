@@ -3,9 +3,12 @@ import { getCashfreeOrder } from "@/app/lib/cashfree";
 import { getDb } from "@/app/lib/db";
 import { orders } from "@/app/lib/db/schema";
 import { databaseConfig } from "@/app/lib/env";
-import { fulfillPaidOrder } from "@/app/lib/licensing/fulfill";
 import Link from "next/link";
 
+/**
+ * Checkout return is display-only. Fulfilment is owned by the Cashfree webhook
+ * so a GET/refresh cannot claim, re-fulfil, or mark an order failed.
+ */
 export default async function CheckoutReturnPage({
   searchParams,
 }: {
@@ -19,25 +22,47 @@ export default async function CheckoutReturnPage({
 
   if (orderId && databaseConfig.success) {
     try {
-      const cf = await getCashfreeOrder(orderId);
-      if (cf.orderStatus === "PAID") {
-        await fulfillPaidOrder({ cashfreeOrderId: orderId });
+      const db = getDb();
+      const [local] = await db
+        .select()
+        .from(orders)
+        .where(eq(orders.cashfreeOrderId, orderId))
+        .limit(1);
+
+      if (local?.status === "paid") {
         status = "paid";
         message =
           "Payment received. Check your email for your licence key and manage link.";
-      } else if (cf.orderStatus === "ACTIVE" || cf.orderStatus === "PENDING") {
-        status = "pending";
+      } else if (local?.status === "refunded") {
+        status = "failed";
         message =
-          "Payment is still processing. We’ll email your licence as soon as Cashfree confirms it.";
-      } else {
+          "This order was refunded. If you need help, contact support.";
+      } else if (
+        local?.status === "failed" ||
+        local?.status === "dropped"
+      ) {
         status = "failed";
         message =
           "We couldn’t confirm a successful payment for this order. You have not been charged for a licence yet — try again from Pricing, or contact support.";
-        const db = getDb();
-        await db
-          .update(orders)
-          .set({ status: "failed", updatedAt: new Date() })
-          .where(eq(orders.cashfreeOrderId, orderId));
+      } else {
+        // Peek Cashfree for UX only — never fulfil or mutate order status here.
+        const cf = await getCashfreeOrder(orderId);
+        if (cf.orderStatus === "PAID") {
+          status = "pending";
+          message =
+            "Payment received by Cashfree. We’re issuing your licence now — check your email in a moment.";
+        } else if (
+          cf.orderStatus === "ACTIVE" ||
+          cf.orderStatus === "PENDING"
+        ) {
+          status = "pending";
+          message =
+            "Payment is still processing. We’ll email your licence as soon as Cashfree confirms it.";
+        } else {
+          status = "pending";
+          message =
+            "We’re still confirming with Cashfree. If you were charged, your licence email will arrive within a few minutes.";
+        }
       }
     } catch {
       status = "pending";

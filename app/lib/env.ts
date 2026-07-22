@@ -82,9 +82,6 @@ export function getManageSecret(): string {
   if (appConfig.success && appConfig.data.MANAGE_LICENSE_SECRET) {
     return appConfig.data.MANAGE_LICENSE_SECRET;
   }
-  if (keygenConfig.success) {
-    return keygenConfig.data.KEYGEN_PRODUCT_TOKEN;
-  }
   throw new Error("MANAGE_LICENSE_SECRET is not configured");
 }
 

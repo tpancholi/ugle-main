@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyCashfreeWebhookSignature } from "@/app/lib/cashfree";
 import { getDb } from "@/app/lib/db";
@@ -28,6 +28,7 @@ type CashfreeWebhookBody = {
     refund?: {
       cf_refund_id?: string | number;
       refund_status?: string;
+      order_id?: string;
     };
   };
 };
@@ -35,6 +36,15 @@ type CashfreeWebhookBody = {
 function normalizeEventType(type: string | undefined): string {
   return (type || "").toUpperCase().replace(/\s+/g, "_");
 }
+
+/** Exact Cashfree PG event types we handle (no substring matching). */
+const PAYMENT_SUCCESS = new Set(["PAYMENT_SUCCESS_WEBHOOK"]);
+const PAYMENT_FAILED = new Set(["PAYMENT_FAILED_WEBHOOK"]);
+const PAYMENT_DROPPED = new Set(["PAYMENT_USER_DROPPED_WEBHOOK"]);
+const REFUND_EVENTS = new Set([
+  "REFUND_STATUS_WEBHOOK",
+  "AUTO_REFUND_STATUS_WEBHOOK",
+]);
 
 export async function POST(req: NextRequest) {
   if (!cashfreeConfig.success || !databaseConfig.success) {
@@ -64,7 +74,8 @@ export async function POST(req: NextRequest) {
   }
 
   const eventType = normalizeEventType(payload.type);
-  const orderId = payload.data?.order?.order_id;
+  const orderId =
+    payload.data?.order?.order_id || payload.data?.refund?.order_id;
   const eventId =
     req.headers.get("x-idempotency-key") ||
     `${eventType}:${orderId || "unknown"}:${payload.event_time || timestamp}`;
@@ -84,22 +95,20 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (
-      eventType.includes("SUCCESS") &&
-      eventType.includes("PAYMENT") &&
-      !eventType.includes("TDR")
-    ) {
+    if (PAYMENT_SUCCESS.has(eventType)) {
       if (!orderId) throw new Error("Missing order_id on success webhook");
       await fulfillPaidOrder({
         cashfreeOrderId: orderId,
         cfPaymentId: String(payload.data?.payment?.cf_payment_id ?? ""),
       });
-    } else if (eventType.includes("FAILED") && eventType.includes("PAYMENT")) {
+    } else if (PAYMENT_FAILED.has(eventType)) {
       if (orderId) {
         await db
           .update(orders)
           .set({ status: "failed", updatedAt: new Date() })
-          .where(eq(orders.cashfreeOrderId, orderId));
+          .where(
+            and(eq(orders.cashfreeOrderId, orderId), eq(orders.status, "pending")),
+          );
       }
       await sendSupportAlert({
         subject: `Payment failed: ${orderId ?? "unknown"}`,
@@ -108,12 +117,14 @@ export async function POST(req: NextRequest) {
         plan: payload.data?.order?.order_tags?.plan ?? "unknown",
         details: rawBody.slice(0, 1500),
       });
-    } else if (eventType.includes("USER_DROPPED") || eventType.includes("DROPPED")) {
+    } else if (PAYMENT_DROPPED.has(eventType)) {
       if (orderId) {
         await db
           .update(orders)
           .set({ status: "dropped", updatedAt: new Date() })
-          .where(eq(orders.cashfreeOrderId, orderId));
+          .where(
+            and(eq(orders.cashfreeOrderId, orderId), eq(orders.status, "pending")),
+          );
       }
       await sendSupportAlert({
         subject: `Payment dropped: ${orderId ?? "unknown"}`,
@@ -122,9 +133,15 @@ export async function POST(req: NextRequest) {
         plan: payload.data?.order?.order_tags?.plan ?? "unknown",
         details: rawBody.slice(0, 1500),
       });
-    } else if (eventType.includes("REFUND")) {
-      if (!orderId) throw new Error("Missing order_id on refund webhook");
-      await handleRefundedOrder(orderId);
+    } else if (REFUND_EVENTS.has(eventType)) {
+      const refundStatus = String(
+        payload.data?.refund?.refund_status || "",
+      ).toUpperCase();
+      // Only revoke on successful refunds — cancelled/pending must not revoke.
+      if (refundStatus === "SUCCESS" || refundStatus === "COMPLETED") {
+        if (!orderId) throw new Error("Missing order_id on refund webhook");
+        await handleRefundedOrder(orderId);
+      }
     }
 
     await db
@@ -135,10 +152,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Webhook processing failed";
+    const isTerminal =
+      err instanceof Error &&
+      (err as Error & { code?: string }).code === "ORDER_TERMINAL";
+
     await db
       .update(webhookEvents)
-      .set({ error: message })
+      .set({
+        error: message,
+        // Terminal conflicts are fully handled — mark processed so retries
+        // don't keep re-alerting.
+        ...(isTerminal ? { processedAt: new Date() } : {}),
+      })
       .where(eq(webhookEvents.eventId, eventId));
+
+    if (isTerminal) {
+      // Expected race (e.g. success after refund) — ack without retry noise.
+      return NextResponse.json({ ok: true, skipped: true });
+    }
 
     await sendSupportAlert({
       subject: `Stuck webhook: ${eventType}`,
@@ -148,9 +179,7 @@ export async function POST(req: NextRequest) {
       details: `${message}\n\n${rawBody.slice(0, 1200)}`,
     });
 
-    // Return 200 so Cashfree doesn't hammer retries forever after alert;
-    // ops can replay from logs. Change to 500 if you prefer Cashfree retries.
-    // Do not echo internal error details in the HTTP response.
-    return NextResponse.json({ ok: false }, { status: 200 });
+    // 5xx so Cashfree retries. Do not echo internal error details.
+    return NextResponse.json({ ok: false }, { status: 500 });
   }
 }

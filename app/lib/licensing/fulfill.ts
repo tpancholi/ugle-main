@@ -1,4 +1,4 @@
-import { and, desc, eq, ne } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { Resend } from "resend";
 import { getDb } from "@/app/lib/db";
 import { customers, licenses, orders } from "@/app/lib/db/schema";
@@ -183,16 +183,27 @@ export async function fulfillPaidOrder(opts: {
     return { order, alreadyProcessed: true as const };
   }
 
+  // Never fulfil (or reinstate) from a terminal non-paid state — e.g. a
+  // refunded order must not be re-claimed into a free Keygen reinstatement.
+  if (
+    order.status === "refunded" ||
+    order.status === "failed" ||
+    order.status === "dropped"
+  ) {
+    const err = new Error(
+      `Order ${opts.cashfreeOrderId} is ${order.status} and cannot be fulfilled`,
+    );
+    (err as Error & { code?: string }).code = "ORDER_TERMINAL";
+    throw err;
+  }
+
   if (order.plan !== "monthly" && order.plan !== "annual") {
     throw new Error("Order plan is not a paid plan");
   }
   const plan = order.plan as PaidPlan;
 
-  // Atomically claim the order. The Cashfree webhook and the /checkout/return
-  // page both call this function and can run concurrently; without an atomic
-  // guard both would fulfil the order and send a duplicate licence email.
-  // The conditional UPDATE only affects the row while it is still un-paid, so
-  // exactly one caller "wins" the claim and proceeds; the other returns early.
+  // Atomically claim only while still pending. Webhook + return-page can race;
+  // only one caller wins. Terminal statuses above are rejected before this.
   const claim = await db
     .update(orders)
     .set({
@@ -200,24 +211,34 @@ export async function fulfillPaidOrder(opts: {
       cfPaymentId: opts.cfPaymentId ?? order.cfPaymentId,
       updatedAt: new Date(),
     })
-    .where(and(eq(orders.id, order.id), ne(orders.status, "paid")))
+    .where(and(eq(orders.id, order.id), eq(orders.status, "pending")))
     .returning();
   if (claim.length === 0) {
     return { order, alreadyProcessed: true as const };
   }
 
   try {
-    return await fulfillClaimedOrder({ order, plan, cfPaymentId: opts.cfPaymentId });
+    return await fulfillClaimedOrder({
+      order,
+      plan,
+      cfPaymentId: opts.cfPaymentId,
+    });
   } catch (err) {
-    // Roll the claim back so a later retry (webhook replay or return-page
-    // refresh) can re-attempt fulfilment instead of leaving a paid order with
-    // no licence.
+    // Roll the claim back so a later retry can re-attempt Keygen/DB work.
+    // Email failures are handled inside fulfillClaimedOrder and do not reach here.
     await db
       .update(orders)
       .set({ status: "pending", updatedAt: new Date() })
       .where(eq(orders.id, order.id));
     throw err;
   }
+}
+
+async function maybeReinstateKeygen(license: typeof licenses.$inferSelect) {
+  // Only reinstate when our DB says suspended — avoids swallowing Keygen errors
+  // for unrelated reinstate failures on active licences.
+  if (license.status !== "suspended") return;
+  await reinstateKeygenLicense(license.keygenLicenseId);
 }
 
 async function fulfillClaimedOrder(opts: {
@@ -250,11 +271,7 @@ async function fulfillClaimedOrder(opts: {
   let expiresAt: Date | null;
 
   if (license && license.status === "trial") {
-    try {
-      await reinstateKeygenLicense(license.keygenLicenseId);
-    } catch {
-      // ignore if not suspended
-    }
+    await maybeReinstateKeygen(license);
     const converted = await convertKeygenLicenseToPaid(
       license.keygenLicenseId,
       plan,
@@ -283,11 +300,7 @@ async function fulfillClaimedOrder(opts: {
       license.status === "expired" ||
       license.status === "suspended")
   ) {
-    try {
-      await reinstateKeygenLicense(license.keygenLicenseId);
-    } catch {
-      // ignore if not suspended
-    }
+    await maybeReinstateKeygen(license);
 
     let updatedKeygen;
     if (license.plan !== plan) {
@@ -351,15 +364,30 @@ async function fulfillClaimedOrder(opts: {
     .where(eq(orders.id, order.id))
     .returning();
 
-  await sendLicenseEmail({
-    email: customer.email,
-    name: customer.name ?? undefined,
-    plan,
-    licenseKey: license.keygenLicenseKey,
-    expiresAt: license.expiresAt,
-    customerId: customer.id,
-    amountTotalInr: order.amountTotalInr,
-  });
+  // Email is best-effort AFTER Keygen + DB succeed. Failure must not roll the
+  // order back to pending (that would re-run renew/convert and extend again).
+  try {
+    await sendLicenseEmail({
+      email: customer.email,
+      name: customer.name ?? undefined,
+      plan,
+      licenseKey: license.keygenLicenseKey,
+      expiresAt: license.expiresAt,
+      customerId: customer.id,
+      amountTotalInr: order.amountTotalInr,
+    });
+  } catch (emailErr) {
+    const detail =
+      emailErr instanceof Error ? emailErr.message : "licence email failed";
+    console.error("[fulfillClaimedOrder] licence email failed:", emailErr);
+    await sendSupportAlert({
+      subject: `Licence email failed: ${customer.email} (${plan})`,
+      kind: "stuck",
+      email: customer.email,
+      plan,
+      details: `Order ${order.cashfreeOrderId} is PAID and Keygen ${license.keygenLicenseId} is active, but email failed: ${detail}. Resend the key manually.`,
+    });
+  }
 
   await sendSupportAlert({
     subject: `Payment success: ${customer.email} (${plan})`,
@@ -385,25 +413,50 @@ export async function handleRefundedOrder(cashfreeOrderId: string) {
     return { alreadyProcessed: true as const };
   }
 
+  // Atomic claim: only one refund handler proceeds from a non-refunded row.
+  // Prefer claiming from paid; also allow pending edge-cases so we still revoke
+  // if somehow refunded before our paid mark landed.
+  const claim = await db
+    .update(orders)
+    .set({ status: "refunded", updatedAt: new Date() })
+    .where(
+      and(
+        eq(orders.id, order.id),
+        inArray(orders.status, ["pending", "paid", "failed", "dropped"]),
+      ),
+    )
+    .returning();
+  if (claim.length === 0) {
+    return { alreadyProcessed: true as const };
+  }
+
   if (order.licenseId) {
     const [license] = await db
       .select()
       .from(licenses)
       .where(eq(licenses.id, order.licenseId))
       .limit(1);
-    if (license) {
-      await revokeKeygenLicense(license.keygenLicenseId);
-      await db
-        .update(licenses)
-        .set({ status: "revoked", updatedAt: new Date() })
-        .where(eq(licenses.id, license.id));
+    if (license && license.status !== "revoked") {
+      try {
+        await revokeKeygenLicense(license.keygenLicenseId);
+        await db
+          .update(licenses)
+          .set({ status: "revoked", updatedAt: new Date() })
+          .where(eq(licenses.id, license.id));
+      } catch (revokeErr) {
+        const detail =
+          revokeErr instanceof Error ? revokeErr.message : "revoke failed";
+        console.error("[handleRefundedOrder] Keygen revoke failed:", revokeErr);
+        await sendSupportAlert({
+          subject: `Keygen revoke FAILED after refund: ${cashfreeOrderId}`,
+          kind: "stuck",
+          email: "unknown",
+          plan: order.plan,
+          details: `Order marked refunded in DB but Keygen license ${license.keygenLicenseId} may still be active (${detail}). Revoke manually.`,
+        });
+      }
     }
   }
-
-  await db
-    .update(orders)
-    .set({ status: "refunded", updatedAt: new Date() })
-    .where(eq(orders.id, order.id));
 
   const [customer] = await db
     .select()
