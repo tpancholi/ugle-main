@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { keygenConfig } from "@/app/lib/env";
+import { fetchWithBackoff } from "@/app/lib/fetch-retry";
 import type { PaidPlan, Plan } from "@/app/lib/pricing";
 
 type KeygenResource = {
@@ -61,7 +62,7 @@ async function keygenFetch(
 ): Promise<KeygenResponse> {
   const cfg = requireKeygen();
   const url = `https://api.keygen.sh/v1/accounts/${cfg.KEYGEN_ACCOUNT_ID}${path}`;
-  const res = await fetch(url, {
+  const res = await fetchWithBackoff(url, {
     ...init,
     headers: {
       Accept: "application/vnd.api+json",
@@ -178,6 +179,7 @@ export async function extendKeygenLicenseForOrder(
   licenseId: string,
   plan: PaidPlan,
   cashfreeOrderId: string,
+  knownRemote?: CreatedLicense,
 ): Promise<CreatedLicense> {
   if (isKeygenMock()) {
     return {
@@ -186,7 +188,7 @@ export async function extendKeygenLicenseForOrder(
       metadata: { lastCashfreeOrderId: cashfreeOrderId, plan },
     };
   }
-  const current = await getKeygenLicense(licenseId);
+  const current = knownRemote ?? (await getKeygenLicense(licenseId));
   if (keygenAlreadyAppliedToOrder(current, cashfreeOrderId)) {
     return current;
   }
@@ -252,19 +254,31 @@ export async function changeKeygenLicensePolicy(
   return mapLicense(asSingle(body.data));
 }
 
-/** Convert trial → paid (or switch plan) and set a fresh term from now. */
+/**
+ * Convert trial → paid (or switch plan). New term is from now; never shrink
+ * remaining paid time (annual→monthly must not drop unused months).
+ */
 export async function convertKeygenLicenseToPaid(
   licenseId: string,
   plan: PaidPlan,
   cashfreeOrderId?: string,
+  knownRemote?: CreatedLicense,
 ): Promise<CreatedLicense> {
   if (isKeygenMock()) return { ...mockLicense(plan), id: licenseId };
-  const expiry = new Date();
-  if (plan === "monthly") {
-    expiry.setMonth(expiry.getMonth() + 1);
-  } else {
-    expiry.setFullYear(expiry.getFullYear() + 1);
+  const current = knownRemote ?? (await getKeygenLicense(licenseId));
+  if (cashfreeOrderId && keygenAlreadyAppliedToOrder(current, cashfreeOrderId)) {
+    return current;
   }
+
+  const termEnd = new Date();
+  if (plan === "monthly") {
+    termEnd.setMonth(termEnd.getMonth() + 1);
+  } else {
+    termEnd.setFullYear(termEnd.getFullYear() + 1);
+  }
+  const priorExpiry = current.expiry ? new Date(current.expiry) : null;
+  const base =
+    priorExpiry && priorExpiry > termEnd ? priorExpiry : termEnd;
 
   const body = await keygenFetch(`/licenses/${licenseId}`, {
     method: "PATCH",
@@ -273,8 +287,9 @@ export async function convertKeygenLicenseToPaid(
         type: "licenses",
         id: licenseId,
         attributes: {
-          expiry: expiry.toISOString(),
+          expiry: base.toISOString(),
           metadata: {
+            ...(current.metadata ?? {}),
             plan,
             source: "website",
             ...(cashfreeOrderId ? { lastCashfreeOrderId: cashfreeOrderId } : {}),

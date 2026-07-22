@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import {
   boolean,
+  index,
   integer,
   jsonb,
   pgEnum,
@@ -9,6 +10,7 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const planEnum = pgEnum("plan", ["trial", "monthly", "annual"]);
 export const orderStatusEnum = pgEnum("order_status", [
@@ -73,6 +75,11 @@ export const licenses = pgTable(
   (t) => [
     uniqueIndex("licenses_keygen_id_uidx").on(t.keygenLicenseId),
     uniqueIndex("licenses_keygen_key_uidx").on(t.keygenLicenseKey),
+    index("licenses_customer_id_idx").on(t.customerId),
+    // One live licence per customer — turns concurrent create races into DB rejects.
+    uniqueIndex("licenses_customer_active_uidx")
+      .on(t.customerId)
+      .where(sql`${t.status} in ('active', 'trial')`),
   ],
 );
 
@@ -103,7 +110,11 @@ export const orders = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (t) => [uniqueIndex("orders_cashfree_order_uidx").on(t.cashfreeOrderId)],
+  (t) => [
+    uniqueIndex("orders_cashfree_order_uidx").on(t.cashfreeOrderId),
+    index("orders_license_id_idx").on(t.licenseId),
+    index("orders_customer_id_idx").on(t.customerId),
+  ],
 );
 
 export const webhookEvents = pgTable(

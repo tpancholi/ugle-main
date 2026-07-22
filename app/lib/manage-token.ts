@@ -29,7 +29,9 @@ export async function verifyManageJwt(token: string): Promise<{
 } | null> {
   try {
     const secret = new TextEncoder().encode(getManageSecret());
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret, {
+      algorithms: ["HS256"],
+    });
     if (!payload.sub || typeof payload.email !== "string") return null;
     return { customerId: payload.sub, email: payload.email };
   } catch {

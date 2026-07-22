@@ -67,7 +67,12 @@ TURNSTILE_SECRET_KEY="1x0000000000000000000000000000000AA"
 
 ## Database (licensing / payments)
 
-Licensing uses Drizzle ORM with the **Neon serverless HTTP** driver (`@neondatabase/serverless`). That driver talks to Neon over HTTP — it will **not** work against a plain local Postgres instance.
+Licensing uses Drizzle ORM with `@neondatabase/serverless`:
+- **HTTP** (`getDb`) for ordinary reads/writes
+- **WebSocket Pool** (`withCustomerLock`) for payment fulfill/refund so a Postgres
+  session advisory lock can be held across Keygen HTTP calls
+
+That stack talks to Neon — it will **not** work against a plain local Postgres instance without swapping drivers.
 
 For local development, use one of:
 - A [Neon](https://neon.tech) database (or Neon branch) and set `DATABASE_URL` to its connection string

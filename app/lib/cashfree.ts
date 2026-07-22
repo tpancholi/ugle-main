@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cashfreeConfig, getAppUrl } from "@/app/lib/env";
+import { fetchWithBackoff } from "@/app/lib/fetch-retry";
 import type { PaidPlan } from "@/app/lib/pricing";
 import { planPricing } from "@/app/lib/pricing";
 
@@ -26,7 +27,7 @@ async function cashfreeFetch<T>(
   init: RequestInit = {},
 ): Promise<T> {
   const cfg = requireCashfree();
-  const res = await fetch(`${cashfreeBaseUrl()}${path}`, {
+  const res = await fetchWithBackoff(`${cashfreeBaseUrl()}${path}`, {
     ...init,
     headers: {
       Accept: "application/json",
@@ -123,8 +124,19 @@ export function verifyCashfreeWebhookSignature(opts: {
   rawBody: string;
   timestamp: string;
   signature: string;
+  /** Reject timestamps older than this many seconds (default 5 minutes). */
+  maxAgeSeconds?: number;
 }): boolean {
   const cfg = requireCashfree();
+  const maxAge = opts.maxAgeSeconds ?? 5 * 60;
+  const ts = Number(opts.timestamp);
+  if (!Number.isFinite(ts)) return false;
+  // Cashfree sends epoch seconds (sometimes ms) — normalise to seconds.
+  const tsSeconds = ts > 1e12 ? Math.floor(ts / 1000) : ts;
+  const age = Math.floor(Date.now() / 1000) - tsSeconds;
+  // Reject future-dated and stale timestamps (clock skew: allow 30s early).
+  if (age < -30 || age > maxAge) return false;
+
   const signedPayload = `${opts.timestamp}${opts.rawBody}`;
   const expected = createHmac("sha256", cfg.CASHFREE_SECRET_KEY)
     .update(signedPayload)

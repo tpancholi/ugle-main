@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyCashfreeWebhookSignature } from "@/app/lib/cashfree";
 import { getDb } from "@/app/lib/db";
@@ -107,20 +107,23 @@ export async function POST(req: NextRequest) {
   try {
     if (PAYMENT_SUCCESS.has(eventType)) {
       if (!orderId) throw new Error("Missing order_id on success webhook");
-      await fulfillPaidOrder({
+      const result = await fulfillPaidOrder({
         cashfreeOrderId: orderId,
         cfPaymentId: String(payload.data?.payment?.cf_payment_id ?? ""),
       });
+      if (result.inProgress) {
+        // Another worker holds the fulfill lease — ask Cashfree to retry shortly.
+        const err = new Error(`Order ${orderId} fulfill in progress`);
+        (err as Error & { code?: string }).code = "ORDER_BUSY";
+        throw err;
+      }
     } else if (PAYMENT_FAILED.has(eventType)) {
       if (orderId) {
         await db
           .update(orders)
           .set({ status: "failed", updatedAt: new Date() })
           .where(
-            and(
-              eq(orders.cashfreeOrderId, orderId),
-              inArray(orders.status, ["pending", "fulfilling"]),
-            ),
+            and(eq(orders.cashfreeOrderId, orderId), eq(orders.status, "pending")),
           );
       }
       await sendSupportAlert({
@@ -136,10 +139,7 @@ export async function POST(req: NextRequest) {
           .update(orders)
           .set({ status: "dropped", updatedAt: new Date() })
           .where(
-            and(
-              eq(orders.cashfreeOrderId, orderId),
-              inArray(orders.status, ["pending", "fulfilling"]),
-            ),
+            and(eq(orders.cashfreeOrderId, orderId), eq(orders.status, "pending")),
           );
       }
       await sendSupportAlert({
@@ -171,34 +171,36 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Webhook processing failed";
-    const isTerminal =
-      err instanceof Error &&
-      (err as Error & { code?: string }).code === "ORDER_TERMINAL";
+    const code =
+      err instanceof Error
+        ? (err as Error & { code?: string }).code
+        : undefined;
+    const isTerminal = code === "ORDER_TERMINAL";
+    const isBusy = code === "ORDER_BUSY";
 
     await db
       .update(webhookEvents)
       .set({
         error: message,
-        // Terminal conflicts are fully handled — mark processed so retries
-        // don't keep re-alerting.
         ...(isTerminal ? { processedAt: new Date() } : {}),
       })
       .where(eq(webhookEvents.eventId, eventId));
 
     if (isTerminal) {
-      // Expected race (e.g. success after refund) — ack without retry noise.
       return NextResponse.json({ ok: true, skipped: true });
     }
 
-    await sendSupportAlert({
-      subject: `Stuck webhook: ${eventType}`,
-      kind: "stuck",
-      email: "unknown",
-      plan: payload.data?.order?.order_tags?.plan ?? "unknown",
-      details: `${message}\n\n${rawBody.slice(0, 1200)}`,
-    });
+    if (!isBusy) {
+      await sendSupportAlert({
+        subject: `Stuck webhook: ${eventType}`,
+        kind: "stuck",
+        email: "unknown",
+        plan: payload.data?.order?.order_tags?.plan ?? "unknown",
+        details: `${message}\n\n${rawBody.slice(0, 1200)}`,
+      });
+    }
 
-    // 5xx so Cashfree retries. Do not echo internal error details.
+    // 5xx so Cashfree retries (including ORDER_BUSY while fulfill lease is held).
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }
