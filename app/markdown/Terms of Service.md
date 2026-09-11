@@ -100,6 +100,36 @@ These Terms of Service (“Terms”) govern your use of the Ugle.ai software (th
 
 **16.5 Waiver.** No failure or delay in exercising any right operates as a waiver of it.
 
-## **17\.  Contact**
+## **17\.  Open-source and third-party software**
 
-**17.1** Questions about these Terms may be directed to [legal@ugle.ai](mailto:legal@ugle.ai), or see our [Privacy Policy](/privacy-policy).
+**17.1** Ugle is proprietary software. Your use of the Ugle application is governed by our End User Licence Agreement, which accompanies every build we distribute.
+
+**17.2** Ugle bundles third-party software and machine-learning model weights that are licensed separately by their respective owners. The complete list of those components, their versions, and their licence terms is included in the NOTICE file distributed inside the application, and is also published at:
+
+[https://ugle.ai/notice](/notice)
+
+**17.3** Nothing in our Terms of Service or End User Licence Agreement removes, restricts, or conditions any right granted to you by the licence of a bundled third-party component. Where our terms conflict with such a licence as it applies to that component, that component's licence prevails.
+
+### **FFmpeg and FFprobe (GPL-3.0)**
+
+**17.4** Ugle bundles the FFmpeg and FFprobe executables. The builds we distribute are configured with GPL-only components and are therefore licensed under the GNU General Public License, version 3.0 (GPL-3.0). They are separate programs, invoked by Ugle as external processes; Ugle itself is not a derivative work of FFmpeg.
+
+In accordance with section 6 of the GPL-3.0, the complete corresponding source code for the FFmpeg builds we distribute is available, at no charge, from:
+
+- macOS builds — [https://evermeet.cx/ffmpeg/](https://evermeet.cx/ffmpeg/)
+- Windows builds — [https://github.com/BtbN/FFmpeg-Builds](https://github.com/BtbN/FFmpeg-Builds)
+- Upstream FFmpeg source — [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html) and [https://git.ffmpeg.org/ffmpeg.git](https://git.ffmpeg.org/ffmpeg.git)
+
+The exact build identifier of the FFmpeg version shipped with each Ugle release is recorded in the NOTICE file inside that release. If you cannot obtain the corresponding source from the locations above, contact us at [legal@ugle.ai](mailto:legal@ugle.ai) and we will supply it by download, or on physical media at no more than our cost of distribution.
+
+### **Previously released versions**
+
+**17.5** Ugle versions up to and including 0.5.6 were released under the GNU Affero General Public License, version 3.0. That licence continues to apply to those versions and to any copy of them lawfully obtained. It does not apply to version 0.5.7 or to any later version.
+
+### **Trade marks**
+
+**17.6** The Ugle name and logo are not licensed under the GPL-3.0, the AGPL-3.0, or any other open-source licence, and remain the property of DEEPSHIELD AI TECHNOLOGY LLP.
+
+## **18\.  Contact**
+
+**18.1** Questions about these Terms may be directed to [legal@ugle.ai](mailto:legal@ugle.ai), or see our [Privacy Policy](/privacy-policy).

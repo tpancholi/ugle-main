@@ -442,11 +442,11 @@ export default function PricingMain({
               }`}
             >
               Annual billing
-              <span className="text-[11px] font-bold text-[#5DA233]">
+              {/* <span className="text-[11px] font-bold text-[#5DA233]">
                 save ~15%
-              </span>
+              </span> */}
             </button>
-            <button
+            {/* <button
               id="billing-monthly"
               onClick={() => setBilling("monthly")}
               className={`px-4 py-1.5 rounded-lg text-[13.5px] font-semibold whitespace-nowrap transition-colors duration-200 ${
@@ -456,7 +456,7 @@ export default function PricingMain({
               }`}
             >
               Monthly billing
-            </button>
+            </button> */}
           </div>
         </motion.div>
       )}
