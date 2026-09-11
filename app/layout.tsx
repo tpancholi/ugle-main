@@ -63,7 +63,7 @@ export const metadata: Metadata = {
       "Find the exact moment inside any recording, locally on your machine, with no uploads and no cloud.",
     images: [
       {
-        url: "/ugle-icon.png",
+        url: "/UgleOGImage.png",
         width: 1200,
         height: 630,
         alt: "Ugle - Local-First Media Search",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     title: "Ugle | Local-First Media Search",
     description:
       "Find the exact moment inside any recording, locally on your machine, with no uploads and no cloud.",
-    images: ["/ugle-icon.png"],
+    images: ["/UgleOGImage.png"],
   },
   other: {
     rel: "preconnect",
