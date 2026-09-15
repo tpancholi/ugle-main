@@ -41,9 +41,9 @@ export const PRICE_CONFIG: Record<Region, PriceConfig> = {
   IN: {
     symbol: "₹",
     monthly: 1900,
-    annual: 18905,
+    annual: 16055,
     origMonthly: 1900,
-    origAnnual: 16055,
+    origAnnual: 18905,
     locale: "en-IN",
     currency: "INR",
   },
