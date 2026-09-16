@@ -62,7 +62,13 @@ export default function Hero() {
             variants={itemVariants}
             className="text-[2.3rem] sm:text-[2.6rem] md:text-7xl lg:text-[5.8rem] font-bold tracking-tight leading-[1.2] text-ugle-slate max-w-7xl"
           >
-            <span className="inline-block">
+            {/* 1. Clean, uninterrupted string for Crawlers, Bots, and Screen Readers */}
+            <span className="sr-only">
+              Find Your Moment. From Your Videos. On Your Machine.
+            </span>
+
+            {/* 2. Visual layout hidden from accessibility & text parsers */}
+            <span aria-hidden="true" className="inline-block">
               Find Your{" "}
               <span className="whitespace-nowrap">
                 M
@@ -78,10 +84,10 @@ export default function Hero() {
                 </span>
                 ment.
               </span>
-            </span>
-            <br />
-            <span className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]">
-              From Your Videos. On Your Machine.
+              <br />
+              <span className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]">
+                From Your Videos. On Your Machine.
+              </span>
             </span>
           </motion.h1>
           <motion.p

@@ -110,7 +110,7 @@ export default function DemoForm() {
             disabled={isPending}
             className="w-full bg-[#75C043] text-[#102206] font-bold py-4 px-6 rounded-lg transition-colors hover:bg-[#5DA233] hover:text-white text-[15px] mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isPending ? "Sending…" : "Request Demo"}
+            {isPending ? "Sending…" : "Submit Organisation Request"}
           </button>
         </form>
       ) : (
