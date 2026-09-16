@@ -90,12 +90,6 @@ export default function Header() {
           {/* Desktop CTAs */}
           <div className="hidden md:flex items-center gap-6 ml-8">
             <Link
-              href="/request-demo"
-              className="text-sm font-semibold text-ugle-slate hover:text-[#75C043] transition-colors"
-            >
-              Request Demo
-            </Link>
-            <Link
               href="/download"
               className="flex items-center justify-center bg-[#1C1C1C] hover:bg-[#75C043] text-white hover:text-[#1C1C1C] font-semibold px-5 py-2.5 rounded-lg shadow-sm transition-all text-sm"
             >
@@ -248,13 +242,6 @@ export default function Header() {
 
         {/* Drawer footer CTAs */}
         <div className="px-6 py-6 border-t border-ugle-light/60 space-y-3">
-          <Link
-            href="/request-demo"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center w-full py-3 rounded-xl text-sm font-semibold text-ugle-slate border border-ugle-light hover:border-[#75C043] hover:text-[#75C043] transition-all"
-          >
-            Request Demo
-          </Link>
           <Link
             href="/download"
             onClick={() => setMobileOpen(false)}
