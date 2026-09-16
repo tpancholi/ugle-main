@@ -25,13 +25,13 @@ export default function DownloadMain() {
               platform="macos"
               variant="filled"
               size="sm"
-              href="/request-trial"
+              href="/request-trial?platform=macos"
             />
             <DownloadButton
               platform="windows"
               variant="outline"
               size="sm"
-              href="/request-trial"
+              href="/request-trial?platform=windows"
             />
           </div>
         </motion.div>

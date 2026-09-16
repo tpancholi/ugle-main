@@ -3,7 +3,11 @@
 import { useActionState } from "react";
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
-import { requestEarlyAccess, type ActionState } from "@/app/actions/early-access";
+import {
+  requestEarlyAccess,
+  type ActionState,
+} from "@/app/actions/early-access";
+import { useSearchParams } from "next/navigation";
 
 const initialState: ActionState = { success: false, message: "" };
 
@@ -15,6 +19,8 @@ export default function GetAccessForm() {
     requestEarlyAccess,
     initialState,
   );
+  const searchParams = useSearchParams();
+  const platform = searchParams.get("platform");
 
   return (
     <motion.div
@@ -54,24 +60,14 @@ export default function GetAccessForm() {
             <label className="block text-[15px] font-bold text-ugle-slate">
               Email
             </label>
-            <input
-              type="email"
-              name="email"
-              required
-              className={inputClass}
-            />
+            <input type="email" name="email" required className={inputClass} />
           </div>
 
           <div className="space-y-2">
             <label className="block text-[15px] font-bold text-ugle-slate">
               Contact number
             </label>
-            <input
-              type="tel"
-              name="phone"
-              required
-              className={inputClass}
-            />
+            <input type="tel" name="phone" required className={inputClass} />
           </div>
 
           <div className="space-y-2">
@@ -84,6 +80,7 @@ export default function GetAccessForm() {
                   type="radio"
                   name="os"
                   value="macOS"
+                  defaultChecked={platform === "macos"}
                   required
                   className="text-[#75C043] focus:ring-[#75C043]"
                 />
@@ -96,6 +93,7 @@ export default function GetAccessForm() {
                   type="radio"
                   name="os"
                   value="Windows"
+                  defaultChecked={platform === "windows"}
                   className="text-[#75C043] focus:ring-[#75C043]"
                 />
                 <span className="text-[15px] font-medium text-ugle-slate">
