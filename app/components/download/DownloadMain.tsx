@@ -17,7 +17,7 @@ export default function DownloadMain() {
             Download Ugle.
           </h1>
           <p className="text-2xl text-white/70 mb-16 font-light">
-            Free. No account. No upload.
+            15-day free trial. No credit card required.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-18">
