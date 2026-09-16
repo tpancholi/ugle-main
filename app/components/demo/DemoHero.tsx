@@ -15,11 +15,14 @@ export default function DemoHero() {
         Enterprise
       </div>
       <h1 className="text-[40px] md:text-[56px] font-extrabold tracking-[-0.02em] leading-[1.04] mb-6">
-        Let&apos;s talk workflow.
+        {/* Let&apos;s talk workflow. */}
+        Ugle for Organisations
       </h1>
       <p className="text-[18px] md:text-[21px] text-white/70 leading-[1.55] mb-12">
-        See how Ugle transforms archive search for editorial teams, newsrooms,
-        and production companies.
+        {/* See how Ugle transforms archive search for editorial teams, newsrooms,
+        and production companies. */}
+        Tell us about your team, archive, and workflow. We&apos;ll help you
+        evaluate Ugle for your organisation.
       </p>
 
       <div className="space-y-8">
