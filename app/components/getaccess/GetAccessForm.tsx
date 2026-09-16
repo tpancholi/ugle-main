@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, Suspense } from "react";
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
 import {
@@ -14,13 +14,43 @@ const initialState: ActionState = { success: false, message: "" };
 const inputClass =
   "w-full bg-[#F8FAF9] border border-ugle-light/60 rounded-[10px] px-4 py-3 text-[15px] text-ugle-slate focus:outline-none focus:border-[#75C043] focus:ring-1 focus:ring-[#75C043] transition-all";
 
+// Only this tiny piece reads the search param.
+function PlatformRadios() {
+  const searchParams = useSearchParams();
+  const platform = searchParams.get("platform");
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <label className="flex items-center gap-3 p-4 border border-ugle-light/60 rounded-[10px] cursor-pointer hover:border-[#75C043] transition-colors">
+        <input
+          type="radio"
+          name="os"
+          value="macOS"
+          defaultChecked={platform === "macos"}
+          required
+          className="text-[#75C043] focus:ring-[#75C043]"
+        />
+        <span className="text-[15px] font-medium text-ugle-slate">macOS</span>
+      </label>
+      <label className="flex items-center gap-3 p-4 border border-ugle-light/60 rounded-[10px] cursor-pointer hover:border-[#75C043] transition-colors">
+        <input
+          type="radio"
+          name="os"
+          value="Windows"
+          defaultChecked={platform === "windows"}
+          className="text-[#75C043] focus:ring-[#75C043]"
+        />
+        <span className="text-[15px] font-medium text-ugle-slate">Windows</span>
+      </label>
+    </div>
+  );
+}
+
 export default function GetAccessForm() {
   const [state, formAction, isPending] = useActionState(
     requestEarlyAccess,
     initialState,
   );
-  const searchParams = useSearchParams();
-  const platform = searchParams.get("platform");
 
   return (
     <motion.div
@@ -74,36 +104,18 @@ export default function GetAccessForm() {
             <label className="block text-[15px] font-bold text-ugle-slate">
               Primary OS
             </label>
-            <div className="grid grid-cols-2 gap-4">
-              <label className="flex items-center gap-3 p-4 border border-ugle-light/60 rounded-[10px] cursor-pointer hover:border-[#75C043] transition-colors">
-                <input
-                  type="radio"
-                  name="os"
-                  value="macOS"
-                  defaultChecked={platform === "macos"}
-                  required
-                  className="text-[#75C043] focus:ring-[#75C043]"
-                />
-                <span className="text-[15px] font-medium text-ugle-slate">
-                  macOS
-                </span>
-              </label>
-              <label className="flex items-center gap-3 p-4 border border-ugle-light/60 rounded-[10px] cursor-pointer hover:border-[#75C043] transition-colors">
-                <input
-                  type="radio"
-                  name="os"
-                  value="Windows"
-                  defaultChecked={platform === "windows"}
-                  className="text-[#75C043] focus:ring-[#75C043]"
-                />
-                <span className="text-[15px] font-medium text-ugle-slate">
-                  Windows
-                </span>
-              </label>
-            </div>
+            <Suspense
+              fallback={
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="h-14.5 rounded-[10px] border border-ugle-light/60 animate-pulse bg-[#F8FAF9]" />
+                  <div className="h-14.5 rounded-[10px] border border-ugle-light/60 animate-pulse bg-[#F8FAF9]" />
+                </div>
+              }
+            >
+              <PlatformRadios />
+            </Suspense>
           </div>
 
-          {/* Validation error */}
           {state.error && (
             <p className="text-red-500 text-sm font-medium">{state.error}</p>
           )}
