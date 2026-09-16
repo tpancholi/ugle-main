@@ -17,7 +17,7 @@ export default function DownloadMain() {
             Download Ugle.
           </h1>
           <p className="text-2xl text-white/70 mb-16 font-light">
-            Free. No account. No upload.
+            15-day free trial. No credit card required.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-18">
@@ -25,13 +25,13 @@ export default function DownloadMain() {
               platform="macos"
               variant="filled"
               size="sm"
-              href="/get-early-access"
+              href="/request-trial?platform=macos"
             />
             <DownloadButton
               platform="windows"
               variant="outline"
               size="sm"
-              href="/get-early-access"
+              href="/request-trial?platform=windows"
             />
           </div>
         </motion.div>
@@ -47,7 +47,7 @@ export default function DownloadMain() {
               System requirements
             </h2>
             <p className="text-sm font-mono text-white/50 mb-8">
-              macOS 12+ · Windows 10 64-bit · v1.0.4 · June 2026
+              macOS 12+ · Windows 10 64-bit · v0.5.9 · September 2026
             </p>
 
             <div className="border border-white/10 rounded-xl overflow-hidden bg-white/5 backdrop-blur">
@@ -118,7 +118,7 @@ export default function DownloadMain() {
             </h2>
             <ol className="space-y-6 list-decimal pl-5 text-white/90 font-medium marker:text-[#75C043] marker:font-bold">
               <li className="pl-4 pb-4 border-b border-white/10">
-                Download the installer (~280MB).
+                Download the installer.
               </li>
               <li className="pl-4 pb-4 border-b border-white/10">
                 Run the installer. No admin privileges required on macOS.

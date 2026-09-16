@@ -641,7 +641,7 @@ export function NewsletterWelcomeEmail({ email }: NewsletterWelcomeEmailProps) {
                             letterSpacing: "0.01em",
                           }}
                         >
-                          Get Early Access →
+                          Request Trial →
                         </a>
                       </div>
                     </td>

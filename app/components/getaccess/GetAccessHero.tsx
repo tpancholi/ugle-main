@@ -10,7 +10,7 @@ export default function GetAccessHero() {
       className="max-w-2xl mb-16"
     >
       <div className="font-mono text-[13px] tracking-[0.14em] uppercase text-[#5DA233] font-medium mb-3">
-        Get Early Access
+        Request Trial
       </div>
       <h1 className="text-[40px] md:text-[62px] font-extrabold tracking-[-0.02em] leading-[1.04] text-ugle-slate mb-4">
         Start searching your archive.
