@@ -30,10 +30,10 @@ export default function GlobalCTA({
 
       <div className="flex flex-col sm:flex-row justify-center gap-6">
         {/* <Link
-          href={ctaLink || "/get-early-access"}
+          href={ctaLink || "/request-trial"}
           className="inline-flex items-center justify-center bg-[#75C043] hover:bg-[#86d950] text-[#1C1C1C] font-bold py-5 px-12 rounded-2xl shadow-lg transition-transform hover:scale-105 text-xl"
         >
-          {ctaText || "Get Early Access"}
+          {ctaText || "Request Trial"}
         </Link> */}
         <CTAButton title={ctaText} link={ctaLink} />
       </div>

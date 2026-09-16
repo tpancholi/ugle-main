@@ -339,7 +339,7 @@ const USE_CASE_DATA: Record<
     ),
     ctatitle: "Protect your sources.",
     ctasubtitle: "100% on-device indexing. Complete privacy.",
-    ctaText: "Get Early Access",
+    ctaText: "Request Trial",
   },
 };
 

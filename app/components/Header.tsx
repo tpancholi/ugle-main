@@ -99,7 +99,7 @@ export default function Header() {
               href="/download"
               className="flex items-center justify-center bg-[#1C1C1C] hover:bg-[#75C043] text-white hover:text-[#1C1C1C] font-semibold px-5 py-2.5 rounded-lg shadow-sm transition-all text-sm"
             >
-              Get Early Access
+              Request Trial
             </Link>
           </div>
 
@@ -110,7 +110,7 @@ export default function Header() {
               href="/download"
               className="flex items-center justify-center bg-[#1C1C1C] hover:bg-[#75C043] text-white hover:text-[#1C1C1C] font-semibold px-4 py-2 rounded-lg shadow-sm transition-all text-xs"
             >
-              Get Early Access
+              Request Trial
             </Link> */}
             <button
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -260,7 +260,7 @@ export default function Header() {
             onClick={() => setMobileOpen(false)}
             className="flex items-center justify-center w-full py-3 rounded-xl bg-[#1C1C1C] hover:bg-[#75C043] text-white hover:text-[#1C1C1C] font-semibold text-sm shadow-sm transition-all"
           >
-            Get Early Access
+            Request Trial
           </Link>
         </div>
       </div>

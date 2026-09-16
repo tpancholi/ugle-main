@@ -102,7 +102,7 @@ function IndividualsPanel({
               )}
             </div>
             <Link
-              href="/get-early-access"
+              href="/request-trial"
               className="inline-flex items-center justify-center px-7 py-3 bg-ugle-slate text-white font-bold text-[14px] rounded-[10px] hover:bg-[#222] transition-colors whitespace-nowrap"
             >
               {isAnnual ? "Buy Annual Licence" : "Buy Monthly Licence"}

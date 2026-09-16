@@ -58,16 +58,16 @@ export default function Footer() {
               href="/download"
               className="hover:text-white transition-colors text-[#75C043]"
             >
-              Get Early Access
+              Request Trial
             </Link>
           </div>
 
           <div className="md:col-span-3 lg:col-span-2 flex flex-col gap-4 text-sm font-semibold text-gray-400 mt-4 md:mt-0">
             {/* <Link
-              href="/get-early-access"
+              href="/request-trial"
               className="hover:text-white transition-colors"
             >
-              Get Early Access
+              Request Trial
             </Link> */}
             <Link
               href="/security"

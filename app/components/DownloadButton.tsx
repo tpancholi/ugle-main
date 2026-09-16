@@ -15,7 +15,7 @@ interface DownloadButtonProps {
   variant?: Variant;
   /** Button size */
   size?: Size;
-  /** Override the top sub-label (e.g. "Get Early Access for") */
+  /** Override the top sub-label (e.g. "Request Trial for") */
   subLabel?: string;
   /** Override the main label (e.g. "Windows") */
   label?: string;
@@ -167,7 +167,7 @@ export default function DownloadButton({
 
   const resolvedHref = href ?? config.defaultHref;
   const resolvedLabel = label ?? config.defaultLabel;
-  const resolvedSubLabel = subLabel ?? "Get Early Access for";
+  const resolvedSubLabel = subLabel ?? "Request Trial for";
 
   const iconSrc = v.iconScheme === "light" ? config.lightIcon : config.darkIcon;
 

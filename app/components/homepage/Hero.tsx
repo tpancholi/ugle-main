@@ -79,7 +79,10 @@ export default function Hero() {
               </span>
             </span>
             <br />
-            <span className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]" aria-hidden="true">
+            <span
+              className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]"
+              aria-hidden="true"
+            >
               From Your Videos. On Your Machine.
             </span>
           </motion.h1>
@@ -100,7 +103,7 @@ export default function Hero() {
             href="/download"
             className="bg-ugle-green hover:bg-[#86d950] transition-colors text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl text-base md:text-lg text-center flex items-center justify-center gap-3 w-full sm:w-auto"
           >
-            Get Early Access
+            Request Trial
           </Link>
           <Link
             href="/how-it-works"

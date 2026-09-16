@@ -441,7 +441,7 @@ export function EarlyAccessAdminNotificationEmail({
               lineHeight: "1.5",
             }}
           >
-            Someone submitted the get-early-access form.
+            Someone submitted the request-trial form.
           </p>
         </td>
       </tr>
@@ -502,9 +502,9 @@ export function EarlyAccessAdminNotificationEmail({
               fontFamily: "monospace",
             }}
           >
-            Automated notification from the Ugle get-early-access form. Reply
-            directly to{" "}
-            <span style={{ color: "#5a9e2f" }}>{email}</span> to follow up.
+            Automated notification from the Ugle request-trial form. Reply
+            directly to <span style={{ color: "#5a9e2f" }}>{email}</span> to
+            follow up.
           </p>
         </td>
       </tr>
