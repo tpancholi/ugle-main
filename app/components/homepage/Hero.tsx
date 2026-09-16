@@ -62,32 +62,27 @@ export default function Hero() {
             variants={itemVariants}
             className="text-[2.3rem] sm:text-[2.6rem] md:text-7xl lg:text-[5.8rem] font-bold tracking-tight leading-[1.2] text-ugle-slate max-w-7xl"
           >
-            {/* 1. Clean, uninterrupted string for Crawlers, Bots, and Screen Readers */}
-            <span className="sr-only">
-              Find Your Moment. From Your Videos. On Your Machine.
-            </span>
-
-            {/* 2. Visual layout hidden from accessibility & text parsers */}
-            <span aria-hidden="true" className="inline-block">
+            <span className="inline-block">
               Find Your{" "}
               <span className="whitespace-nowrap">
                 M
-                <span className="relative inline-block w-[0.68em] h-auto align-baseline">
+                {/* Relative wrapper keeps 'o' in the flow as the exact layout spacer */}
+                <span className="relative inline-block w-[0.68em] h-auto">
                   <span className="text-transparent select-none">o</span>
                   <Image
                     src="/ugle-icon.png"
                     alt=""
                     aria-hidden="true"
                     fill
-                    className="inset-0 object-contain pointer-events-none select-none"
+                    className="absolute inset-0 object-contain pointer-events-none select-none"
                   />
                 </span>
                 ment.
               </span>
-              <br />
-              <span className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]">
-                From Your Videos. On Your Machine.
-              </span>
+            </span>
+            <br />
+            <span className="text-[2.3rem] sm:text-[2.6rem] lg:text-[4rem]">
+              From Your Videos. On Your Machine.
             </span>
           </motion.h1>
           <motion.p
