@@ -534,7 +534,7 @@ export default async function page({
       <section className="w-full border-t border-ugle-light/60 bg-[#F8FAF9] py-16 md:py-20">
         <GlobalCTA
           title="Take control of your media."
-          subtitle="Join the early access program and see for yourself."
+          subtitle="Get 15 days trial and see for yourself."
         />
       </section>
     </>
